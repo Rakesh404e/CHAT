@@ -8,10 +8,10 @@ class openAIModel(LLM):
         self.client = OpenAI(api_key=api_key)
         self.model_name = model_name
 
-    def generate(self, message: str) -> str:
-        response = self.client.responses.create(
+    def generate(self, message: list) -> str:
+        response = self.client.chat.completions.create(
             model=self.model_name,
-            input=message
+            messages=message
         )
 
-        return response.output_text
+        return response.choices[0].message.content

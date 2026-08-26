@@ -50,6 +50,23 @@ class Database:
         """)
 
         cursor.execute("""
+            CREATE TABLE IF NOT EXISTS long_term_memories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                memory_type TEXT NOT NULL,
+                key TEXT NOT NULL,
+                value TEXT NOT NULL,
+                scope TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+                FOREIGN KEY (user_id)
+                    REFERENCES users(id)
+                    ON DELETE CASCADE
+            )
+        """)
+        
+        cursor.execute("""
             CREATE INDEX IF NOT EXISTS idx_conversations_user
             ON conversations(user_id)
         """)
@@ -58,6 +75,12 @@ class Database:
             CREATE INDEX IF NOT EXISTS idx_messages_conversation_time
             ON messages(conversation_id, created_at)
         """)
+
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_memory_user
+            ON long_term_memories(user_id)
+        """)
+
 
         connection.commit()
         connection.close()

@@ -1,4 +1,3 @@
-from anthropic.types import citation_content_block_location_param
 class ChatStore:
 
     def __init__(self, database):
@@ -163,3 +162,96 @@ class ChatStore:
 
         connection.commit()
         connection.close()
+
+    def save_memory(self,user_id,memory_type,key,value,scope=None):
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO long_term_memories
+            (user_id, memory_type, key, value, scope)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                user_id,
+                memory_type,
+                key,
+                value,
+                scope
+            )
+        )
+
+        memory_id = cursor.lastrowid
+
+        connection.commit()
+        connection.close()
+
+        return memory_id
+
+    def find_memory(self,user_id,memory_type,key,scope=None):
+
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT id, value
+            FROM long_term_memories
+            WHERE user_id = ?
+            AND memory_type = ?
+            AND key = ?
+            AND (
+                scope = ?
+                OR (scope IS NULL AND ? IS NULL)
+            )
+            """,
+            (
+                user_id,
+                memory_type,
+                key,
+                scope,
+                scope
+            )
+        )
+
+        row = cursor.fetchone()
+
+        connection.close()
+
+        if not row:
+            return None
+
+        return {
+            "id": row[0],
+            "value": row[1]
+        }
+
+
+    def get_memories(self, user_id):
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT id, memory_type, key, value, scope
+            FROM long_term_memories
+            WHERE user_id = ?
+            """,
+            (user_id,)
+        )
+
+        rows = cursor.fetchall()
+
+        connection.close()
+
+        return [
+            {
+                "id": row[0],
+                "memory_type": row[1],
+                "key": row[2],
+                "value": row[3],
+                "scope": row[4]
+            }
+            for row in rows
+        ]

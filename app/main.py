@@ -20,8 +20,8 @@ def main():
     user = chat_store.get_user(user_id)
 
     if user is None:
-        print("User not found.")
-        return
+        user_id = chat_store.create_user()
+        print(f"New user created: {user_id}")
 
     conversations=chat_store.get_user_conversations(user_id)
 
