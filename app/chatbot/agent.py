@@ -1,16 +1,28 @@
 from models.base import LLM
 from memory.short_term import ShortTermMemory
 from memory.sumarizer import Summarizer
+from memory.context_manager import ContextManager
 
 
 class ChatAgent:
 
-    def __init__(self, model: LLM, memory: ShortTermMemory, chat_store, conversation_id):
+    def __init__(
+        self,
+        model: LLM,
+        memory: ShortTermMemory,
+        chat_store,
+        conversation_id,
+        long_term_memory=None,
+        extractor=None
+    ):
         self.model = model
         self.memory = memory
         self.chat_store = chat_store
         self.conversation_id = conversation_id
+        self.long_term_memory = long_term_memory
+        self.extractor = extractor
         self.summarizer = Summarizer(model)
+        self.context_manager = ContextManager()
 
     def load_context(self):
         messages = self.chat_store.get_recent_messages(
@@ -37,44 +49,70 @@ class ChatAgent:
             self.memory.remove_old_messages(overflow_count)
 
     def chat(self, message):
-
-        # 1. Save user message
+        # 1. Save user message to persistent DB
         self.chat_store.save_message(
             self.conversation_id,
             "user",
             message
         )
 
-        # 2. Add to active memory
+        # 2. Add to active short-term memory
         self.memory.add_message(
             "user",
             message
         )
 
-        # Summarize if memory exceeds 10 messages
+        # 3. Retrieve relevant long-term memories if available
+        relevant_memories = []
+        if self.long_term_memory:
+            try:
+                relevant_memories = self.long_term_memory.search_memories(message, top_k=5)
+            except Exception as e:
+                print(f"[ChatAgent] Error searching long-term memory: {e}")
+
+        # 4. Check summarization if message limit reached
         self._check_and_summarize()
 
-        # 3. Send context to LLM
-        response = self.model.generate(
-            self.memory.get_messages()
+        # 5. Build system & message context including long-term memories
+        full_context = self.context_manager.build_context(
+            summary=self.memory.get_summary(),
+            recent_messages=self.memory.messages[:-1],  # Exclude current message since ContextManager appends it
+            current_message=message,
+            long_term_memories=relevant_memories
         )
-        # print(self.memory.summary)
-        # print(self.memory.messages)
 
-        # 4. Save assistant response
+        # 6. Send context to LLM
+        response = self.model.generate(full_context)
+
+        # 7. Save assistant response
         self.chat_store.save_message(
             self.conversation_id,
             "assistant",
             response
         )
 
-        # 5. Add only after successful DB save
+        # 8. Add assistant response to active memory
         self.memory.add_message(
             "assistant",
             response
         )
 
-        # Check summarization again after assistant response
+        # Check summarization again
         self._check_and_summarize()
+
+        # 9. Extract and store/update long-term memories asynchronously/post-response
+        if self.extractor and self.long_term_memory:
+            try:
+                extracted_memories = self.extractor.extract(message)
+                for mem in extracted_memories:
+                    self.long_term_memory.add_or_update_memory(
+                        memory_type=mem.memory_type.value,
+                        key=mem.key,
+                        value=mem.value,
+                        scope=mem.scope
+                    )
+            except Exception as e:
+                print(f"[ChatAgent] Error extracting/saving memory: {e}")
 
         return response
+

@@ -255,3 +255,35 @@ class ChatStore:
             }
             for row in rows
         ]
+
+    def update_memory(self, memory_id, value):
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            UPDATE long_term_memories
+            SET value = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (value, memory_id)
+        )
+
+        connection.commit()
+        connection.close()
+
+    def delete_memory(self, memory_id):
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            DELETE FROM long_term_memories
+            WHERE id = ?
+            """,
+            (memory_id,)
+        )
+
+        connection.commit()
+        connection.close()
+
