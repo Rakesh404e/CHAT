@@ -13,7 +13,8 @@ class ChatAgent:
         chat_store,
         conversation_id,
         long_term_memory=None,
-        extractor=None
+        extractor=None,
+        context_manager=None
     ):
         self.model = model
         self.memory = memory
@@ -22,7 +23,8 @@ class ChatAgent:
         self.long_term_memory = long_term_memory
         self.extractor = extractor
         self.summarizer = Summarizer(model)
-        self.context_manager = ContextManager()
+        self.context_manager = context_manager or ContextManager()
+
 
     def load_context(self):
         messages = self.chat_store.get_recent_messages(

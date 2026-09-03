@@ -68,8 +68,10 @@ learn/
 │       ├── base.py            # Abstract interface for vector stores
 │       └── chroma_store.py    # ChromaDB persistent vector store implementation
 └── tests/
-    └── test_long_term_memory.py # Unit tests for LTM, vector store, and extraction
+    ├── test_context_manager.py # Unit tests for Context Engineering, token budgeting, & pruning
+    └── test_long_term_memory.py # Unit tests for LTM, vector store, deletion, and extraction
 ```
+
 
 ---
 
@@ -297,6 +299,7 @@ python app/main.py
 
 ## 📌 Summary of Features Implemented
 - ✅ **Dual-Store Synchronization**: Relational integrity via SQLite + High performance semantic retrieval via ChromaDB.
+- ✅ **Context Engineering Engine**: Dynamic prompt assembly, token budgeting, memory categorization (*Preferences*, *Goals*, *Facts*, *Plans*, *Decisions*), dynamic turn pruning, and context stats analytics.
 - ✅ **Long-Term Memory Deletion**: Purges memory entries by ID, key/type/scope, or bulk user wipe across SQLite and ChromaDB.
 - ✅ **Automated Deletion Extraction**: `MemoryExtractor` detects forget/delete requests ("Forget my location") and executes deletions.
 - ✅ **Hybrid Retrieval (Vector + Keyword RRF)**: Merges dense vector semantic search with SQLite metadata & keyword search using Reciprocal Rank Fusion (RRF).
