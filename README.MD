@@ -64,13 +64,26 @@ learn/
 │   │   ├── openai_model.py    # OpenAI chat completion model implementation
 │   │   └── factory.py         # Factory pattern for instantiating LLM model instances
 │   ├── storage/               # Placeholder directory for file storage modules
+│   ├── caching/
+│   │   ├── cache_store.py     # In-Memory TTLCache store with capacity eviction
+│   │   ├── embedding_cache.py # CachedEmbeddingModel wrapper for vector embedding caching
+│   │   └── memory_cache.py    # Memory query cache with automated invalidation
+│   ├── observability/
+│   │   ├── logger.py          # Structured JSON/Console logger with trace IDs
+│   │   └── metrics.py         # Operational metrics collector (latency, hit rate, errors)
+│   ├── utils/
+│   │   └── retry.py           # Exponential backoff retry utility decorator
 │   └── vector_store/
 │       ├── base.py            # Abstract interface for vector stores
 │       └── chroma_store.py    # ChromaDB persistent vector store implementation
 └── tests/
+    ├── test_caching.py        # Unit tests for TTLCache, embedding caching, & memory search caching
     ├── test_context_manager.py # Unit tests for Context Engineering, token budgeting, & pruning
-    └── test_long_term_memory.py # Unit tests for LTM, vector store, deletion, and extraction
+    ├── test_long_term_memory.py # Unit tests for LTM, vector store, deletion, and extraction
+    └── test_observability.py   # Unit tests for structured logging, metrics, retries, & fallbacks
 ```
+
+
 
 
 ---
@@ -298,6 +311,8 @@ python app/main.py
 ---
 
 ## 📌 Summary of Features Implemented
+- ✅ **Multi-Level Caching Architecture**: In-Memory `TTLCache` store with capacity eviction, SHA-256 `CachedEmbeddingModel` for 0ms embedding lookups, and user-level `MemoryQueryCache` with automated cache invalidation upon memory mutation.
+- ✅ **Observability & Reliability Framework**: Structured JSON/Console logging with Trace IDs, operational metrics tracking (LLM latency, embedding calls, memory hit rate), exponential backoff retries (`retry_with_backoff`), and safe vector degradation.
 - ✅ **Dual-Store Synchronization**: Relational integrity via SQLite + High performance semantic retrieval via ChromaDB.
 - ✅ **Context Engineering Engine**: Dynamic prompt assembly, token budgeting, memory categorization (*Preferences*, *Goals*, *Facts*, *Plans*, *Decisions*), dynamic turn pruning, and context stats analytics.
 - ✅ **Long-Term Memory Deletion**: Purges memory entries by ID, key/type/scope, or bulk user wipe across SQLite and ChromaDB.

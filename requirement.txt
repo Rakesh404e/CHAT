@@ -8,5 +8,5 @@ chromadb
 tiktoken
 python-dotenv
 pydantic
-
-sqlite3
+fastapi
+uvicorn

@@ -1,7 +1,10 @@
+import time
 from models.base import LLM
 from memory.short_term import ShortTermMemory
 from memory.sumarizer import Summarizer
 from memory.context_manager import ContextManager
+from observability.logger import logger
+from observability.metrics import metrics_collector
 
 
 class ChatAgent:
@@ -24,7 +27,6 @@ class ChatAgent:
         self.extractor = extractor
         self.summarizer = Summarizer(model)
         self.context_manager = context_manager or ContextManager()
-
 
     def load_context(self):
         messages = self.chat_store.get_recent_messages(
@@ -50,7 +52,11 @@ class ChatAgent:
             self.memory.set_summary(new_summary)
             self.memory.remove_old_messages(overflow_count)
 
-    def chat(self, message):
+    def chat(self, message: str, trace_id: str = None) -> str:
+        trace_id = trace_id or logger.generate_trace_id()
+        start_time = time.time()
+        logger.info(f"Starting chat turn for conversation {self.conversation_id}", trace_id=trace_id)
+
         # 1. Save user message to persistent DB
         self.chat_store.save_message(
             self.conversation_id,
@@ -70,7 +76,7 @@ class ChatAgent:
             try:
                 relevant_memories = self.long_term_memory.search_memories(message, top_k=5)
             except Exception as e:
-                print(f"[ChatAgent] Error searching long-term memory: {e}")
+                logger.warning(f"Error searching long-term memory: {e}", trace_id=trace_id)
 
         # 4. Check summarization if message limit reached
         self._check_and_summarize()
@@ -84,7 +90,10 @@ class ChatAgent:
         )
 
         # 6. Send context to LLM
-        response = self.model.generate(full_context)
+        if hasattr(self.model, "generate") and "trace_id" in self.model.generate.__code__.co_varnames:
+            response = self.model.generate(full_context, trace_id=trace_id)
+        else:
+            response = self.model.generate(full_context)
 
         # 7. Save assistant response
         self.chat_store.save_message(
@@ -129,8 +138,19 @@ class ChatAgent:
                             scope=mem.scope
                         )
             except Exception as e:
-                print(f"[ChatAgent] Error extracting/processing memory: {e}")
+                logger.warning(f"Error extracting/processing memory: {e}", trace_id=trace_id)
 
+        duration_ms = (time.time() - start_time) * 1000
+        logger.info(f"Completed chat turn in {duration_ms:.2f}ms", trace_id=trace_id, duration_ms=duration_ms)
         return response
+
+    def get_observability_report(self) -> dict:
+        return {
+            "conversation_id": self.conversation_id,
+            "context_stats": self.context_manager.get_last_context_stats(),
+            "metrics": metrics_collector.get_metrics_summary()
+        }
+
+
 
 

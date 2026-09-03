@@ -1,31 +1,58 @@
-# Python cache
+# Dependencies & Package Managers
+node_modules/
+frontend/node_modules/
+
+# Build & Output Directories
+dist/
+build/
+frontend/dist/
+frontend/build/
+
+# Python Virtual Environments & Caches
 __pycache__/
 *.py[cod]
-
-# Virtual environment
+*$py.class
 myenv/
 .venv/
 venv/
+env/
+ENV/
 
-# Environment variables / secrets
-.env
-
-# Database
+# Databases & Vector Stores
 *.db
 *.sqlite
 *.sqlite3
+chatbot.db
+app/chatbot.db
+chroma_db/
+app/chroma_db/
 
-# IDE
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.coverage.*
+
+# IDE & Editor Files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# OS files
+# OS System Files
 .DS_Store
 Thumbs.db
+desktop.ini
 
-myenv/
-__pycache__/
-.env
-*.db
-*.sqlite
-*.sqlite3
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

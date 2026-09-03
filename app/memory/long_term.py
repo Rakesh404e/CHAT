@@ -1,9 +1,21 @@
+from caching.memory_cache import MemoryQueryCache
+from caching.embedding_cache import CachedEmbeddingModel
+
+
 class LongTermMemory:
-    def __init__(self, chat_store, user_id, vector_store=None, embedding_model=None):
+    def __init__(self, chat_store, user_id, vector_store=None, embedding_model=None, query_cache=None):
         self.chat_store = chat_store
         self.user_id = int(user_id)
         self.vector_store = vector_store
-        self.embedding_model = embedding_model
+        if embedding_model and not isinstance(embedding_model, CachedEmbeddingModel):
+            self.embedding_model = CachedEmbeddingModel(embedding_model)
+        else:
+            self.embedding_model = embedding_model
+        self.query_cache = query_cache or MemoryQueryCache()
+
+    def _invalidate_query_cache(self):
+        if self.query_cache:
+            self.query_cache.invalidate_user(self.user_id)
 
     def add_or_update_memory(self, memory_type: str, key: str, value: str, scope: str | None = None) -> int:
         """
@@ -46,6 +58,7 @@ class LongTermMemory:
                 except Exception as e:
                     print(f"[LongTermMemory] Vector store update error: {e}")
 
+            self._invalidate_query_cache()
             return memory_id
         else:
             # 1. Save to SQLite
@@ -70,6 +83,7 @@ class LongTermMemory:
                 except Exception as e:
                     print(f"[LongTermMemory] Vector store add error: {e}")
 
+            self._invalidate_query_cache()
             return memory_id
 
     def add_memory(self, memory_type, key, value, scope=None):
@@ -78,10 +92,16 @@ class LongTermMemory:
     def search_memories(self, query: str, top_k: int = 5, min_score: float = 0.0) -> list[dict]:
         """
         Retrieves relevant memories using Hybrid Search (Vector Similarity + SQL Keyword Search)
-        combined via Reciprocal Rank Fusion (RRF).
+        combined via Reciprocal Rank Fusion (RRF), accelerated by MemoryQueryCache.
         """
+        if self.query_cache:
+            cached_res = self.query_cache.get(self.user_id, query, top_k, min_score)
+            if cached_res is not None:
+                return cached_res
+
         vector_candidates = {}
         vector_ranks = {}
+
 
         # 1. Vector Search
         if self.vector_store and self.embedding_model:
@@ -176,7 +196,18 @@ class LongTermMemory:
 
         # Sort candidates by combined RRF score descending
         rrf_results.sort(key=lambda x: x["score"], reverse=True)
-        return rrf_results[:top_k]
+        final_results = rrf_results[:top_k]
+
+        if self.query_cache:
+            self.query_cache.set(self.user_id, query, top_k, min_score, final_results)
+
+        try:
+            from observability.metrics import metrics_collector
+            metrics_collector.record_memory_search(len(final_results))
+        except Exception:
+            pass
+
+        return final_results
 
     def search(self, query: str) -> list[dict]:
         return self.search_memories(query)
@@ -191,6 +222,12 @@ class LongTermMemory:
                 self.vector_store.delete(str(memory_id))
             except Exception as e:
                 print(f"[LongTermMemory] Vector store delete error: {e}")
+        self._invalidate_query_cache()
+        try:
+            from observability.metrics import metrics_collector
+            metrics_collector.record_memory_deletion(1)
+        except Exception:
+            pass
 
     def delete_memory_by_key(self, memory_type: str, key: str, scope: str | None = None) -> int:
         """
@@ -208,7 +245,14 @@ class LongTermMemory:
                     self.vector_store.delete(str(mem_id))
                 except Exception as e:
                     print(f"[LongTermMemory] Vector store delete error for ID {mem_id}: {e}")
-        return len(deleted_ids)
+        self._invalidate_query_cache()
+        count = len(deleted_ids)
+        try:
+            from observability.metrics import metrics_collector
+            metrics_collector.record_memory_deletion(count)
+        except Exception:
+            pass
+        return count
 
     def delete_all_memories(self) -> int:
         """
@@ -220,5 +264,14 @@ class LongTermMemory:
                 self.vector_store.delete_by_user(self.user_id)
             except Exception as e:
                 print(f"[LongTermMemory] Vector store delete_by_user error: {e}")
-        return len(deleted_ids)
+        self._invalidate_query_cache()
+        count = len(deleted_ids)
+        try:
+            from observability.metrics import metrics_collector
+            metrics_collector.record_memory_deletion(count)
+        except Exception:
+            pass
+        return count
+
+
 
