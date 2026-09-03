@@ -287,3 +287,57 @@ class ChatStore:
         connection.commit()
         connection.close()
 
+    def delete_memory_by_key(self, user_id, memory_type, key, scope=None):
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        # Find matching memory IDs first
+        cursor.execute(
+            """
+            SELECT id FROM long_term_memories
+            WHERE user_id = ?
+            AND memory_type = ?
+            AND key = ?
+            AND (
+                scope = ?
+                OR (scope IS NULL AND ? IS NULL)
+                OR (scope = '' AND (? IS NULL OR ? = ''))
+            )
+            """,
+            (user_id, memory_type, key, scope, scope, scope, scope)
+        )
+        rows = cursor.fetchall()
+        deleted_ids = [row[0] for row in rows]
+
+        if deleted_ids:
+            placeholders = ",".join(["?"] * len(deleted_ids))
+            cursor.execute(
+                f"DELETE FROM long_term_memories WHERE id IN ({placeholders})",
+                deleted_ids
+            )
+            connection.commit()
+
+        connection.close()
+        return deleted_ids
+
+    def delete_all_memories(self, user_id):
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            "SELECT id FROM long_term_memories WHERE user_id = ?",
+            (user_id,)
+        )
+        rows = cursor.fetchall()
+        deleted_ids = [row[0] for row in rows]
+
+        cursor.execute(
+            "DELETE FROM long_term_memories WHERE user_id = ?",
+            (user_id,)
+        )
+
+        connection.commit()
+        connection.close()
+        return deleted_ids
+
+

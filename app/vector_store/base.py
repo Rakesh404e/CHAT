@@ -18,3 +18,7 @@ class VectorStore(ABC):
     @abstractmethod
     def delete(self, id):
         pass
+
+    @abstractmethod
+    def delete_by_user(self, user_id):
+        pass

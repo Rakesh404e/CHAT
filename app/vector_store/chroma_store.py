@@ -53,4 +53,11 @@ class ChromaVectorStore(VectorStore):
         try:
             self.collection.delete(ids=[str(id)])
         except Exception:
-            pass
+            pass
+
+    def delete_by_user(self, user_id: int):
+        try:
+            self.collection.delete(where={"user_id": int(user_id)})
+        except Exception:
+            pass
+

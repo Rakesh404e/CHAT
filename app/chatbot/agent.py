@@ -100,19 +100,35 @@ class ChatAgent:
         # Check summarization again
         self._check_and_summarize()
 
-        # 9. Extract and store/update long-term memories asynchronously/post-response
+        # 9. Extract and store/update/delete long-term memories
         if self.extractor and self.long_term_memory:
             try:
                 extracted_memories = self.extractor.extract(message)
                 for mem in extracted_memories:
-                    self.long_term_memory.add_or_update_memory(
-                        memory_type=mem.memory_type.value,
-                        key=mem.key,
-                        value=mem.value,
-                        scope=mem.scope
-                    )
+                    action = getattr(mem, "action", "add_or_update")
+                    if hasattr(action, "value"):
+                        action = action.value
+
+                    m_type = mem.memory_type.value if hasattr(mem.memory_type, "value") else str(mem.memory_type)
+
+                    if action == "delete_all":
+                        self.long_term_memory.delete_all_memories()
+                    elif action == "delete":
+                        self.long_term_memory.delete_memory_by_key(
+                            memory_type=m_type,
+                            key=mem.key,
+                            scope=mem.scope
+                        )
+                    else:
+                        self.long_term_memory.add_or_update_memory(
+                            memory_type=m_type,
+                            key=mem.key,
+                            value=mem.value,
+                            scope=mem.scope
+                        )
             except Exception as e:
-                print(f"[ChatAgent] Error extracting/saving memory: {e}")
+                print(f"[ChatAgent] Error extracting/processing memory: {e}")
 
         return response
+
 

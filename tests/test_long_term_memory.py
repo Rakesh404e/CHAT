@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import MagicMock
 
 import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'app')))
 
 from app.memory.database import Database
@@ -12,6 +13,7 @@ from app.memory.chat_store import ChatStore
 from app.memory.long_term import LongTermMemory
 from app.memory.extractor import MemoryExtractor, Memory, MemoryType
 from app.vector_store.chroma_store import ChromaVectorStore
+
 
 
 class MockEmbeddingModel:
@@ -119,6 +121,87 @@ class TestLongTermMemory(unittest.TestCase):
         self.assertEqual(memories[0].key, "favorite_subject")
         self.assertEqual(memories[0].value, "user loves DSA")
 
+    def test_delete_memory_by_id(self):
+        mem_id = self.ltm.add_or_update_memory("fact", "location", "lives in New York")
+        self.assertEqual(len(self.chat_store.get_memories(self.user_id)), 1)
+
+        self.ltm.delete_memory(mem_id)
+        self.assertEqual(len(self.chat_store.get_memories(self.user_id)), 0)
+        search_res = self.ltm.search_memories("New York", top_k=1)
+        self.assertEqual(len(search_res), 0)
+
+    def test_delete_memory_by_key(self):
+        self.ltm.add_or_update_memory("fact", "location", "lives in New York")
+        self.ltm.add_or_update_memory("goal", "target_role", "wants to be SDE")
+
+        self.assertEqual(len(self.chat_store.get_memories(self.user_id)), 2)
+
+        deleted_count = self.ltm.delete_memory_by_key("fact", "location")
+        self.assertEqual(deleted_count, 1)
+
+        memories = self.chat_store.get_memories(self.user_id)
+        self.assertEqual(len(memories), 1)
+        self.assertEqual(memories[0]["key"], "target_role")
+
+        search_res = self.ltm.search_memories("location New York", top_k=5)
+        self.assertTrue(all(item["metadata"]["key"] != "location" for item in search_res))
+
+    def test_delete_all_memories(self):
+        self.ltm.add_or_update_memory("preference", "fav_color", "blue")
+        self.ltm.add_or_update_memory("fact", "city", "Tokyo")
+
+        self.assertEqual(len(self.chat_store.get_memories(self.user_id)), 2)
+
+        count = self.ltm.delete_all_memories()
+        self.assertEqual(count, 2)
+        self.assertEqual(len(self.chat_store.get_memories(self.user_id)), 0)
+
+    def test_hybrid_retrieval_and_rrf(self):
+        self.ltm.add_or_update_memory("preference", "favorite_language", "user loves Python")
+        self.ltm.add_or_update_memory("goal", "target_role", "user aims for Backend Engineer")
+        self.ltm.add_or_update_memory("fact", "city", "lives in San Francisco")
+
+        results = self.ltm.search_memories("python backend engineer", top_k=2)
+        self.assertGreater(len(results), 0)
+        self.assertIn("score", results[0])
+        # Top result should contain either python or backend engineer
+        top_content = results[0]["content"].lower()
+        self.assertTrue("python" in top_content or "backend" in top_content)
+
+    def test_memory_extractor_deletion_parsing(self):
+        mock_llm = MagicMock()
+        mock_llm.generate.return_value = '''
+        ```json
+        {
+            "memories": [
+                {
+                    "action": "delete",
+                    "memory_type": "fact",
+                    "key": "location",
+                    "value": "",
+                    "scope": null
+                },
+                {
+                    "action": "delete_all",
+                    "memory_type": "fact",
+                    "key": "",
+                    "value": "",
+                    "scope": null
+                }
+            ]
+        }
+        ```
+        '''
+
+        extractor = MemoryExtractor(model=mock_llm)
+        memories = extractor.extract("Forget my location and wipe all memories")
+
+        self.assertEqual(len(memories), 2)
+        self.assertEqual(memories[0].action.value, "delete")
+        self.assertEqual(memories[0].key, "location")
+        self.assertEqual(memories[1].action.value, "delete_all")
+
 
 if __name__ == "__main__":
     unittest.main()
+
