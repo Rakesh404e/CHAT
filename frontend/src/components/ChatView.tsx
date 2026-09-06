@@ -67,6 +67,12 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <Hash className="h-3.5 w-3.5 text-purple-500" />
               <span>{lastChatResponse.trace_id?.substring(0, 8)}</span>
             </div>
+            {lastChatResponse.background_task_id && (
+              <div className="flex items-center space-x-1 text-indigo-600 dark:text-indigo-400 font-medium">
+                <Sparkles className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
+                <span>async worker: {lastChatResponse.background_task_id.substring(0, 14)}...</span>
+              </div>
+            )}
           </div>
         )}
       </div>

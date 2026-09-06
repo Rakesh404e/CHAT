@@ -25,6 +25,7 @@ export interface ChatResponse {
   assistant_response: string;
   trace_id: string;
   duration_ms: number;
+  background_task_id?: string;
   observability?: any;
 }
 
@@ -35,6 +36,19 @@ export interface MemoryItem {
   key: string;
   value: string;
   scope?: string;
+}
+
+export interface BackgroundTask {
+  task_id: string;
+  task_type: string;
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  created_at: number;
+  started_at?: number | null;
+  completed_at?: number | null;
+  duration_ms?: number | null;
+  error?: string | null;
+  result?: any;
+  metadata?: Record<string, any>;
 }
 
 export interface ObservabilityMetrics {
@@ -64,6 +78,14 @@ export interface ObservabilityMetrics {
       misses_total: number;
       hit_rate_pct: number;
       hits_by_type: Record<string, number>;
+    };
+    background_tasks?: {
+      total: number;
+      completed: number;
+      failed: number;
+      running: number;
+      avg_latency_ms: number;
+      by_type: Record<string, number>;
     };
     reliability: {
       retries_total: number;
@@ -111,11 +133,21 @@ export const api = {
   },
 
   // Chat
-  async sendChatMessage(userId: number, conversationId: number, message: string): Promise<ChatResponse> {
+  async sendChatMessage(
+    userId: number,
+    conversationId: number,
+    message: string,
+    asyncProcessing: boolean = true
+  ): Promise<ChatResponse> {
     const res = await fetch(`${API_BASE}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userId, conversation_id: conversationId, message }),
+      body: JSON.stringify({
+        user_id: userId,
+        conversation_id: conversationId,
+        message,
+        async_processing: asyncProcessing
+      }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: 'Chat request failed' }));
@@ -153,6 +185,33 @@ export const api = {
       method: 'DELETE',
     });
     if (!res.ok) throw new Error('Failed to clear memories');
+  },
+
+  // Tasks
+  async getTasks(userId?: number, status?: string): Promise<BackgroundTask[]> {
+    const params = new URLSearchParams();
+    if (userId) params.append('user_id', userId.toString());
+    if (status) params.append('status', status);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    const res = await fetch(`${API_BASE}/tasks${query}`);
+    if (!res.ok) throw new Error('Failed to fetch background tasks');
+    return res.json();
+  },
+
+  async getTask(taskId: string): Promise<BackgroundTask> {
+    const res = await fetch(`${API_BASE}/tasks/${taskId}`);
+    if (!res.ok) throw new Error('Failed to fetch task');
+    return res.json();
+  },
+
+  async triggerReindex(userId: number): Promise<BackgroundTask> {
+    const res = await fetch(`${API_BASE}/tasks/reindex`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId }),
+    });
+    if (!res.ok) throw new Error('Failed to trigger background reindex');
+    return res.json();
   },
 
   // Observability
