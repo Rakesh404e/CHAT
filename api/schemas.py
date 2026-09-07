@@ -34,6 +34,7 @@ class ChatRequest(BaseModel):
     user_id: int
     conversation_id: int
     message: str
+    async_processing: Optional[bool] = True
 
 
 class ChatResponse(BaseModel):
@@ -43,6 +44,7 @@ class ChatResponse(BaseModel):
     assistant_response: str
     trace_id: str
     duration_ms: float
+    background_task_id: Optional[str] = None
     observability: Optional[Dict[str, Any]] = None
 
 
@@ -65,6 +67,23 @@ class MemorySearchItem(BaseModel):
     key: str
     value: str
     scope: Optional[str] = None
+
+
+class TaskResponse(BaseModel):
+    task_id: str
+    task_type: str
+    status: str
+    created_at: float
+    started_at: Optional[float] = None
+    completed_at: Optional[float] = None
+    duration_ms: Optional[float] = None
+    error: Optional[str] = None
+    result: Optional[Any] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+class TaskReindexRequest(BaseModel):
+    user_id: int
 
 
 class ObservabilityReport(BaseModel):

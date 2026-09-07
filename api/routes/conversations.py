@@ -58,3 +58,21 @@ def get_conversation_messages(
 ):
     messages = services.chat_store.get_recent_messages(conversation_id, limit=limit)
     return [MessageItem(role=m["role"], content=m["content"]) for m in messages]
+
+
+@router.delete("/api/conversations/{conversation_id}")
+def delete_conversation(
+    conversation_id: int,
+    services: AppServices = Depends(get_services)
+):
+    conn = services.database.get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM conversations WHERE id = ?", (conversation_id,))
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail=f"Conversation {conversation_id} not found")
+
+    services.chat_store.delete_conversation(conversation_id)
+    return {"status": "success", "deleted_conversation_id": conversation_id}
+

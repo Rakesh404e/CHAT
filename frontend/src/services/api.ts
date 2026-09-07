@@ -105,8 +105,19 @@ export const api = {
 
   async createUser(): Promise<User> {
     const res = await fetch(`${API_BASE}/users`, { method: 'POST' });
-    if (!res.ok) throw new Error('Failed to create user');
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Failed to create user (${res.status})`);
+    }
     return res.json();
+  },
+
+  async deleteUser(userId: number): Promise<void> {
+    const res = await fetch(`${API_BASE}/users/${userId}`, { method: 'DELETE' });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Failed to delete user (${res.status})`);
+    }
   },
 
   // Conversations
@@ -122,8 +133,19 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title }),
     });
-    if (!res.ok) throw new Error('Failed to create conversation');
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Failed to create conversation (${res.status})`);
+    }
     return res.json();
+  },
+
+  async deleteConversation(conversationId: number): Promise<void> {
+    const res = await fetch(`${API_BASE}/conversations/${conversationId}`, { method: 'DELETE' });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Failed to delete conversation (${res.status})`);
+    }
   },
 
   async getMessages(conversationId: number): Promise<Message[]> {

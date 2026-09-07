@@ -50,6 +50,10 @@ class TestObservabilityAndReliability(unittest.TestCase):
         metrics.record_memory_search(hit_count=0)
         metrics.record_memory_deletion(2)
         metrics.record_retry()
+        metrics.record_task_started()
+        metrics.record_task_event("memory_extraction", 80.0, success=True)
+        metrics.record_task_started()
+        metrics.record_task_event("summarization", 120.0, success=False)
 
         summary = metrics.get_metrics_summary()
 
@@ -65,6 +69,12 @@ class TestObservabilityAndReliability(unittest.TestCase):
         self.assertEqual(summary["memory"]["hit_rate_pct"], 50.0)
         self.assertEqual(summary["memory"]["deletions_total"], 2)
         self.assertEqual(summary["reliability"]["retries_total"], 1)
+
+        self.assertEqual(summary["background_tasks"]["total"], 2)
+        self.assertEqual(summary["background_tasks"]["completed"], 1)
+        self.assertEqual(summary["background_tasks"]["failed"], 1)
+        self.assertEqual(summary["background_tasks"]["running"], 0)
+        self.assertEqual(summary["background_tasks"]["avg_latency_ms"], 80.0)
 
     def test_retry_decorator_success(self):
         attempts = 0

@@ -30,7 +30,7 @@ class ContextManager:
         self.max_memory_tokens = max_memory_tokens
         self.max_history_tokens = max_history_tokens
         self.last_stats = {}
-
+        
     def format_categorized_memories(self, memories: list) -> str:
         """
         Categorizes retrieved memories into distinct sections (Preferences, Goals, Facts, Plans, Decisions)
@@ -149,4 +149,4 @@ class ContextManager:
 
     def get_last_context_stats(self) -> dict:
         return self.last_stats
-
+

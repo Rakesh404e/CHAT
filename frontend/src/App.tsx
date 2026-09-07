@@ -102,6 +102,29 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleDeleteUser = async (userId: number) => {
+    try {
+      await api.deleteUser(userId);
+      const remainingUsers = users.filter((u) => u.id !== userId);
+      setUsers(remainingUsers);
+
+      if (currentUserId === userId) {
+        setConversations([]);
+        setMessages([]);
+        if (remainingUsers.length > 0) {
+          setCurrentUserId(remainingUsers[0].id);
+        } else {
+          const newUser = await api.createUser();
+          setUsers([newUser]);
+          setCurrentUserId(newUser.id);
+        }
+      }
+    } catch (err: any) {
+      console.error('Failed to delete user:', err);
+      alert(`Failed to delete user: ${err.message || 'Unknown error'}`);
+    }
+  };
+
   // Conversation Handlers
   const handleSelectConversation = (convId: number) => {
     setCurrentConversationId(convId);
@@ -116,6 +139,32 @@ export const App: React.FC = () => {
       setMessages([]);
     } catch (err) {
       console.error('Failed to create conversation:', err);
+    }
+  };
+
+  const handleDeleteConversation = async (convId: number) => {
+    try {
+      await api.deleteConversation(convId);
+      const remainingConvs = conversations.filter((c) => c.id !== convId);
+      setConversations(remainingConvs);
+
+      if (currentConversationId === convId) {
+        setMessages([]);
+        if (remainingConvs.length > 0) {
+          setCurrentConversationId(remainingConvs[0].id);
+        } else if (currentUserId !== null) {
+          const newConv = await api.createConversation(currentUserId, 'New Session');
+          setConversations([newConv]);
+          setCurrentConversationId(newConv.id);
+          setMessages([]);
+        } else {
+          setCurrentConversationId(null);
+          setMessages([]);
+        }
+      }
+    } catch (err: any) {
+      console.error('Failed to delete conversation:', err);
+      alert(`Failed to delete conversation: ${err.message || 'Unknown error'}`);
     }
   };
 
@@ -172,10 +221,12 @@ export const App: React.FC = () => {
               currentUserId={currentUserId}
               onSelectUser={handleSelectUser}
               onCreateUser={handleCreateUser}
+              onDeleteUser={handleDeleteUser}
               conversations={conversations}
               currentConversationId={currentConversationId}
               onSelectConversation={handleSelectConversation}
               onCreateConversation={handleCreateConversation}
+              onDeleteConversation={handleDeleteConversation}
             />
             <ChatView
               messages={messages}
@@ -183,6 +234,7 @@ export const App: React.FC = () => {
               loading={loading}
               currentConversationTitle={activeConv?.title}
               lastChatResponse={lastChatResponse}
+              onDeleteConversation={currentConversationId ? () => handleDeleteConversation(currentConversationId) : undefined}
             />
           </>
         )}

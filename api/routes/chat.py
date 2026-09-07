@@ -17,10 +17,14 @@ def send_chat_message(
 
     start_time = time.time()
     
-    agent = services.get_agent(user_id=body.user_id, conversation_id=body.conversation_id)
+    agent = services.get_agent(
+        user_id=body.user_id,
+        conversation_id=body.conversation_id,
+        async_processing=True if body.async_processing is None else body.async_processing
+    )
     
     try:
-        response_text = agent.chat(body.message)
+        response_text = agent.chat(body.message, async_processing=body.async_processing)
         duration_ms = (time.time() - start_time) * 1000
         
         observability_data = agent.get_observability_report()
@@ -42,6 +46,7 @@ def send_chat_message(
             assistant_response=response_text,
             trace_id=observability_data.get("metrics", {}).get("last_trace_id", "trace-ok"),
             duration_ms=duration_ms,
+            background_task_id=agent.get_last_task_id(),
             observability=observability_data
         )
     except Exception as e:

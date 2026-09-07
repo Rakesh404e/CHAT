@@ -71,3 +71,26 @@ Ran 3 tests in 2.123s
 
 OK
 ```
+
+---
+
+## Delete User & Conversation Feature Verification
+
+### Root Cause Analysis
+1. **Outdated Server Process**: An old instance of `uvicorn` (PID 27076) had been running since September 3rd without `--reload`. Newer API routes (`DELETE /api/users/{user_id}` and `DELETE /api/conversations/{conversation_id}`) were not recognized by this process, returning `404 Not Found` or `405 Method Not Allowed`.
+2. **UI State & Visibility**:
+   - Delete button for sessions in [`Sidebar.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/Sidebar.tsx) was styled with `opacity-0 group-hover:opacity-100`, making it invisible on the active session.
+   - Active user delete in [`Sidebar.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/Sidebar.tsx) dropdown did not close the dropdown after action.
+   - Deletion errors were only logged to console without user-facing feedback.
+   - Stale conversation and message states were not immediately cleared during user deletion.
+
+### Fixes & Enhancements
+1. **Server Restart with Auto-Reload**: Terminated stale uvicorn instance and restarted with `python -m uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload` so all current and future endpoints stay synchronized.
+2. **Frontend UI Enhancements**:
+   - Added persistent visibility (`opacity-60 hover:opacity-100`) for the delete button on the active conversation item in [`Sidebar.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/Sidebar.tsx).
+   - Added a dedicated "Delete Session" button in the [`ChatView.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/ChatView.tsx) header banner.
+   - Updated dropdown user deletion in [`Sidebar.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/Sidebar.tsx) to automatically close the dropdown and show subtle delete icons.
+   - Enhanced [`api.ts`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/services/api.ts) and [`App.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/App.tsx) error handling with alert feedback and clean state resetting during transitions.
+3. **End-to-End Verification**:
+   - Ran automated test discovering and verifying user creation, conversation creation, message persistence, conversation deletion, user deletion (cascading messages and memories), and 404 responses on non-existent resources through the Vite proxy (`http://localhost:5173/api`).
+   - Verified TypeScript compilation and production build (`npm run build`).

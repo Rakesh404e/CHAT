@@ -29,6 +29,27 @@ class MetricsCollector:
         self.cache_misses_total = 0
         self.cache_hits_by_type: Dict[str, int] = {}
 
+        # Background Task Telemetry
+        self.tasks_total = 0
+        self.tasks_completed = 0
+        self.tasks_failed = 0
+        self.tasks_running = 0
+        self.task_latencies_ms: List[float] = []
+        self.tasks_by_type: Dict[str, int] = {}
+
+    def record_task_started(self):
+        self.tasks_total += 1
+        self.tasks_running += 1
+
+    def record_task_event(self, task_type: str, duration_ms: float, success: bool = True):
+        self.tasks_running = max(0, self.tasks_running - 1)
+        if success:
+            self.tasks_completed += 1
+            self.task_latencies_ms.append(duration_ms)
+        else:
+            self.tasks_failed += 1
+        self.tasks_by_type[task_type] = self.tasks_by_type.get(task_type, 0) + 1
+
     def record_llm_call(self, duration_ms: float, success: bool = True):
         self.llm_calls_total += 1
         if success:
@@ -70,6 +91,10 @@ class MetricsCollector:
             round(sum(self.embedding_latencies_ms) / len(self.embedding_latencies_ms), 2)
             if self.embedding_latencies_ms else 0.0
         )
+        avg_task_latency = (
+            round(sum(self.task_latencies_ms) / len(self.task_latencies_ms), 2)
+            if self.task_latencies_ms else 0.0
+        )
         hit_rate = (
             round((self.memory_hits_total / self.memory_searches_total) * 100, 2)
             if self.memory_searches_total > 0 else 0.0
@@ -102,6 +127,14 @@ class MetricsCollector:
                 "misses_total": self.cache_misses_total,
                 "hit_rate_pct": cache_hit_rate,
                 "hits_by_type": self.cache_hits_by_type
+            },
+            "background_tasks": {
+                "total": self.tasks_total,
+                "completed": self.tasks_completed,
+                "failed": self.tasks_failed,
+                "running": self.tasks_running,
+                "avg_latency_ms": avg_task_latency,
+                "by_type": self.tasks_by_type
             },
             "reliability": {
                 "retries_total": self.retries_total

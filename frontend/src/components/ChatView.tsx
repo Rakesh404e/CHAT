@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User as UserIcon, Sparkles, Clock, Hash, CheckCircle, Terminal } from 'lucide-react';
+import { Send, Bot, User as UserIcon, Sparkles, Clock, Hash, CheckCircle, Terminal, Trash2 } from 'lucide-react';
 import { Message, ChatResponse } from '../services/api';
 
 interface ChatViewProps {
@@ -8,6 +8,7 @@ interface ChatViewProps {
   loading: boolean;
   currentConversationTitle?: string;
   lastChatResponse?: ChatResponse | null;
+  onDeleteConversation?: () => void;
 }
 
 export const ChatView: React.FC<ChatViewProps> = ({
@@ -16,6 +17,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   loading,
   currentConversationTitle,
   lastChatResponse,
+  onDeleteConversation,
 }) => {
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -56,25 +58,43 @@ export const ChatView: React.FC<ChatViewProps> = ({
           </h2>
         </div>
 
-        {/* Telemetry quick metrics */}
-        {lastChatResponse && (
-          <div className="hidden md:flex items-center space-x-3 text-xs font-mono text-[var(--color-body)] bg-[var(--color-canvas-elevated)]/80 px-3 py-1.5 rounded-md border border-[var(--color-hairline)] backdrop-blur-xs">
-            <div className="flex items-center space-x-1">
-              <Clock className="h-3.5 w-3.5 text-blue-500" />
-              <span>{Math.round(lastChatResponse.duration_ms)}ms</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Hash className="h-3.5 w-3.5 text-purple-500" />
-              <span>{lastChatResponse.trace_id?.substring(0, 8)}</span>
-            </div>
-            {lastChatResponse.background_task_id && (
-              <div className="flex items-center space-x-1 text-indigo-600 dark:text-indigo-400 font-medium">
-                <Sparkles className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
-                <span>async worker: {lastChatResponse.background_task_id.substring(0, 14)}...</span>
+        <div className="flex items-center space-x-3">
+          {/* Telemetry quick metrics */}
+          {lastChatResponse && (
+            <div className="hidden md:flex items-center space-x-3 text-xs font-mono text-[var(--color-body)] bg-[var(--color-canvas-elevated)]/80 px-3 py-1.5 rounded-md border border-[var(--color-hairline)] backdrop-blur-xs">
+              <div className="flex items-center space-x-1">
+                <Clock className="h-3.5 w-3.5 text-blue-500" />
+                <span>{Math.round(lastChatResponse.duration_ms)}ms</span>
               </div>
-            )}
-          </div>
-        )}
+              <div className="flex items-center space-x-1">
+                <Hash className="h-3.5 w-3.5 text-purple-500" />
+                <span>{lastChatResponse.trace_id?.substring(0, 8)}</span>
+              </div>
+              {lastChatResponse.background_task_id && (
+                <div className="flex items-center space-x-1 text-indigo-600 dark:text-indigo-400 font-medium">
+                  <Sparkles className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
+                  <span>async worker: {lastChatResponse.background_task_id.substring(0, 14)}...</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Delete active session button */}
+          {onDeleteConversation && (
+            <button
+              onClick={() => {
+                if (window.confirm(`Are you sure you want to delete conversation "${currentConversationTitle || 'this session'}"?`)) {
+                  onDeleteConversation();
+                }
+              }}
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 border border-[var(--color-hairline)] rounded-md transition-colors"
+              title="Delete Active Session"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Delete Session</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Messages Thread Container */}

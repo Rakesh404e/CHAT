@@ -90,7 +90,7 @@ class ChatStore:
 
         cursor.execute(
             """
-            SELECT id
+            SELECT id, created_at
             FROM users
             WHERE id = ?
             """,
@@ -339,5 +339,68 @@ class ChatStore:
         connection.commit()
         connection.close()
         return deleted_ids
+
+    def delete_conversation(self, conversation_id: int) -> bool:
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        # Delete messages associated with conversation
+        cursor.execute(
+            "DELETE FROM messages WHERE conversation_id = ?",
+            (conversation_id,)
+        )
+
+        cursor.execute(
+            "DELETE FROM conversations WHERE id = ?",
+            (conversation_id,)
+        )
+        deleted = cursor.rowcount > 0
+
+        connection.commit()
+        connection.close()
+        return deleted
+
+    def delete_user(self, user_id: int) -> bool:
+        connection = self.database.get_connection()
+        cursor = connection.cursor()
+
+        # 1. Find all user conversations
+        cursor.execute(
+            "SELECT id FROM conversations WHERE user_id = ?",
+            (user_id,)
+        )
+        conv_rows = cursor.fetchall()
+        conv_ids = [r[0] for r in conv_rows]
+
+        # 2. Delete messages for all user conversations
+        if conv_ids:
+            placeholders = ",".join(["?"] * len(conv_ids))
+            cursor.execute(
+                f"DELETE FROM messages WHERE conversation_id IN ({placeholders})",
+                conv_ids
+            )
+
+        # 3. Delete user conversations
+        cursor.execute(
+            "DELETE FROM conversations WHERE user_id = ?",
+            (user_id,)
+        )
+
+        # 4. Delete user memories
+        cursor.execute(
+            "DELETE FROM long_term_memories WHERE user_id = ?",
+            (user_id,)
+        )
+
+        # 5. Delete user
+        cursor.execute(
+            "DELETE FROM users WHERE id = ?",
+            (user_id,)
+        )
+        deleted = cursor.rowcount > 0
+
+        connection.commit()
+        connection.close()
+        return deleted
 
 

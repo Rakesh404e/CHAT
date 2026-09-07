@@ -16,6 +16,7 @@ from memory.extractor import MemoryExtractor
 from vector_store.chroma_store import ChromaVectorStore
 from embeddings.openai_embedding import OpenAIEmbedding
 from chatbot.agent import ChatAgent
+from tasks.manager import task_manager
 
 
 class AppServices:
@@ -25,6 +26,9 @@ class AppServices:
         self.database.initialize()
         self.chat_store = ChatStore(self.database)
         
+        # Background Task Manager
+        self.task_manager = task_manager
+
         # Models and Embeddings
         self.model = ModelFactory.create(self.config)
         self.vector_store = ChromaVectorStore(path=os.path.join(app_dir, "chroma_db"))
@@ -42,7 +46,7 @@ class AppServices:
             embedding_model=self.embedding_model
         )
 
-    def get_agent(self, user_id: int, conversation_id: int) -> ChatAgent:
+    def get_agent(self, user_id: int, conversation_id: int, async_processing: bool = True) -> ChatAgent:
         long_term_memory = self.get_long_term_memory(user_id)
         short_term_memory = ShortTermMemory()
         
@@ -52,7 +56,9 @@ class AppServices:
             chat_store=self.chat_store,
             conversation_id=conversation_id,
             long_term_memory=long_term_memory,
-            extractor=self.extractor
+            extractor=self.extractor,
+            task_manager=self.task_manager,
+            async_processing=async_processing
         )
         agent.load_context()
         return agent
