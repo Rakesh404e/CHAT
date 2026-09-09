@@ -1,34 +1,42 @@
 # AI Agent Dual-Store Long-Term Memory & Retrieval System
 
-An industry-standard conversational AI agent featuring a **Dual-Store Long-Term Memory (LTM) & Semantic Retrieval Architecture**. Built using **Python**, **SQLite** (for structured relational consistency and key-value preference tracking), **ChromaDB** (for vector similarity search), and **OpenAI API** (for response generation and text embeddings).
+An industry-standard conversational AI agent featuring a **Dual-Store Long-Term Memory (LTM) & Semantic Retrieval Architecture**, **Async Background Task Processing Engine**, **FastAPI REST API Layer**, and an interactive **React + TypeScript Web UI Dashboard**. Built using **Python**, **FastAPI**, **SQLite** (for structured relational consistency and key-value preference tracking), **ChromaDB** (for vector similarity search), **React + Vite** (for modern dark-mode frontend management), and **OpenAI API** (for response generation and text embeddings).
 
 ---
 
 ## 🏗️ Architecture Overview
 
-The system combines **Relational Consistency** (SQLite) and **Semantic Retrieval** (ChromaDB vector embeddings) with **Automated LLM Memory Extraction** and **Memory Reversal/Updates**.
+The system combines **Relational Consistency** (SQLite) and **Semantic Retrieval** (ChromaDB vector embeddings) with **Async Background LLM Memory Extraction**, **Non-Blocking Execution Queues**, and **Memory Reversal/Updates**.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User
-    participant Agent as ChatAgent
+    actor User as React Web UI / User
+    participant API as FastAPI REST Layer (api.main)
+    participant TaskQueue as AsyncTaskManager (app.tasks)
+    participant Agent as ChatAgent (app.chatbot)
     participant Extractor as MemoryExtractor
     participant LTM as LongTermMemory Manager
     participant SQLite as SQLite DB (chatbot.db)
     participant Chroma as ChromaDB VectorStore (chroma_db)
 
-    User->>Agent: "I prefer Machine Learning over DSA"
+    User->>API: POST /api/chat/message ("I prefer Machine Learning over DSA")
+    API->>Agent: process_turn("I prefer Machine Learning over DSA")
     Agent->>LTM: search_memories("I prefer Machine Learning over DSA")
     LTM->>Chroma: Vector search (filtered by user_id)
     Chroma-->>LTM: Semantic match ("favorite_subject: user loves DSA")
     LTM-->>Agent: Relevant memories context
     Agent->>Agent: LLM generates response with long-term memory context
-    Agent->>Extractor: extract("I prefer Machine Learning over DSA")
-    Extractor-->>Agent: Memory(type=preference, key=favorite_subject, value="...")
-    Agent->>LTM: add_or_update_memory(...)
+    Agent-->>API: Instant LLM Response
+    API-->>User: Return response (non-blocking)
+    
+    API->>TaskQueue: submit_task(extract_and_save_memories)
+    TaskQueue->>Extractor: extract("I prefer Machine Learning over DSA")
+    Extractor-->>TaskQueue: Memory(type=preference, key=favorite_subject, value="...")
+    TaskQueue->>LTM: add_or_update_memory(...)
     LTM->>SQLite: UPDATE or INSERT long_term_memories
     LTM->>Chroma: Embed & UPSERT vector in ChromaDB
+    TaskQueue-->>API: Task Status: COMPLETED
 ```
 
 ---
@@ -40,34 +48,50 @@ learn/
 ├── .env                       # Environment credentials & configuration (API keys, models)
 ├── .env .expamle              # Example template for environment variables
 ├── .gitignore                 # Git ignore rules for environment, venv, and DB files
-├── requirement.txt            # Python dependencies (OpenAI, ChromaDB, Pydantic, etc.)
+├── requirement.txt            # Python dependencies (FastAPI, OpenAI, ChromaDB, Pydantic, etc.)
 ├── README.md                  # Comprehensive project documentation
 ├── walkthrough.md             # Development walkthrough & test execution reports
-├── app/                       # Core application codebase
-│   ├── main.py                # CLI entry point for interactive chat sessions
+├── DESIGN.md                  # System design & architecture specification
+│
+├── api/                       # FastAPI REST API Backend Service Layer
+│   ├── main.py                # FastAPI app initialization, CORS middleware, & route mounting
+│   ├── dependencies.py        # Dependency injection container (ChatAgent, ChatStore, LTM, TaskManager)
+│   ├── schemas.py             # Pydantic request/response payload schemas
+│   └── routes/                # API endpoint controller routers
+│       ├── chat.py            # Chat interaction turns & streaming endpoints
+│       ├── conversations.py   # Conversation session CRUD & deletion routes
+│       ├── memory.py          # LTM memory viewing, creation, & deletion endpoints
+│       ├── observability.py   # Metrics and application logs retrieval
+│       ├── tasks.py           # Background async task status & progress monitoring
+│       └── users.py           # User profile creation, listing, & deletion endpoints
+│
+├── app/                       # Core Python application logic
+│   ├── main.py                # CLI entry point for interactive terminal chat sessions
 │   ├── config.py              # Application configuration & env settings loader
 │   ├── chatbot/
-│   │   └── agent.py           # ChatAgent orchestrator (retrieval, generation, memory pipeline)
-│   ├── embeddings/
-│   │   ├── base.py            # Abstract base class for embedding models
-│   │   └── openai_embedding.py# OpenAI text embedding implementation
+│   │   └── agent.py           # ChatAgent orchestrator (retrieval, prompt assembly, memory pipeline)
+│   ├── tasks/
+│   │   ├── __init__.py        # Task manager exports
+│   │   └── manager.py         # AsyncTaskManager worker thread pool & non-blocking task queue
 │   ├── memory/
 │   │   ├── database.py        # SQLite schema initialization & connection factory
 │   │   ├── chat_store.py      # SQLite CRUD store (users, conversations, messages, memories)
-│   │   ├── short_term.py      # Active session turn-level buffer management
-│   │   ├── sumarizer.py       # Conversation history summarization on context overflow
-│   │   ├── context_manager.py # Prompt builder combining summary, LTM, & recent messages
-│   │   ├── extractor.py       # LLM memory extraction engine (Pydantic / JSON schema)
-│   │   └── long_term.py       # Dual-store sync manager (SQLite + ChromaDB memory reversal)
+│   │   ├── short_term.py      # Active session turn-level message buffer
+│   │   ├── sumarizer.py       # Conversation history rolling summarizer
+│   │   ├── context_manager.py # Dynamic prompt builder combining summary, LTM, & turn history
+│   │   ├── extractor.py       # LLM structured memory extraction engine
+│   │   └── long_term.py       # Dual-store manager (SQLite + ChromaDB in-place memory updates)
+│   ├── caching/
+│   │   ├── cache_store.py     # In-Memory TTLCache store with capacity eviction
+│   │   ├── embedding_cache.py # CachedEmbeddingModel wrapper for SHA-256 vector caching
+│   │   └── memory_cache.py    # Memory query cache with automated invalidation
+│   ├── embeddings/
+│   │   ├── base.py            # Abstract base class for embedding models
+│   │   └── openai_embedding.py# OpenAI text embedding implementation (text-embedding-3-small)
 │   ├── models/
 │   │   ├── base.py            # Abstract base class for LLM interfaces
 │   │   ├── openai_model.py    # OpenAI chat completion model implementation
 │   │   └── factory.py         # Factory pattern for instantiating LLM model instances
-│   ├── storage/               # Placeholder directory for file storage modules
-│   ├── caching/
-│   │   ├── cache_store.py     # In-Memory TTLCache store with capacity eviction
-│   │   ├── embedding_cache.py # CachedEmbeddingModel wrapper for vector embedding caching
-│   │   └── memory_cache.py    # Memory query cache with automated invalidation
 │   ├── observability/
 │   │   ├── logger.py          # Structured JSON/Console logger with trace IDs
 │   │   └── metrics.py         # Operational metrics collector (latency, hit rate, errors)
@@ -76,21 +100,38 @@ learn/
 │   └── vector_store/
 │       ├── base.py            # Abstract interface for vector stores
 │       └── chroma_store.py    # ChromaDB persistent vector store implementation
-└── tests/
-    ├── test_caching.py        # Unit tests for TTLCache, embedding caching, & memory search caching
-    ├── test_context_manager.py # Unit tests for Context Engineering, token budgeting, & pruning
-    ├── test_long_term_memory.py # Unit tests for LTM, vector store, deletion, and extraction
-    └── test_observability.py   # Unit tests for structured logging, metrics, retries, & fallbacks
+│
+├── frontend/                  # React + TypeScript + Vite Web Dashboard
+│   ├── package.json           # Frontend package dependencies (React, Lucide, Tailwind)
+│   ├── vite.config.ts         # Vite build configuration & API proxy setup
+│   ├── index.html             # Single-page app HTML entry point
+│   └── src/
+│       ├── main.tsx           # React app bootstrap renderer
+│       ├── App.tsx            # Main layout container & state coordinator
+│       ├── index.css          # Styling & glassmorphism theme system
+│       ├── services/
+│       │   └── api.ts         # Axios REST API client & error handling
+│       └── components/
+│           ├── Header.tsx     # Context token budget stats bar & user switcher
+│           ├── Sidebar.tsx    # Session history, user profiles, & session creation/deletion
+│           ├── ChatView.tsx   # Real-time chat workspace, turn history, & prompt suggestions
+│           ├── MemoryInspector.tsx # Interactive LTM drawer (CRUD operations on user memories)
+│           └── ObservabilityPanel.tsx # Live metrics, cache stats, background tasks, & logs
+│
+└── tests/                     # Comprehensive Unit & Integration Test Suite
+    ├── test_api_endpoints.py  # Integration tests for FastAPI REST endpoints
+    ├── test_async_tasks.py    # Unit tests for AsyncTaskManager & background task execution
+    ├── test_caching.py        # Unit tests for TTLCache, embedding caching, & memory query caching
+    ├── test_context_manager.py# Unit tests for Context Engineering, token budgeting, & pruning
+    ├── test_long_term_memory.py# Unit tests for LTM, dual storage, updates, deletion, & retrieval
+    └── test_observability.py  # Unit tests for structured logging, metrics, retries, & fallbacks
 ```
-
-
-
 
 ---
 
 ## 📄 File Formats & Detailed File Breakdown
 
-### 🛠️ Root Configuration & Project Files
+### 🛠️ Root Configuration & Core Entry Points
 
 #### [`config.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/config.py)
 - **Purpose**: Loads configuration variables from `.env`.
@@ -102,7 +143,7 @@ learn/
   - `TEMPERATURE`: Sampling temperature for response generation (`0.7`).
 
 #### [`main.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/main.py)
-- **Purpose**: Interactive CLI entry point.
+- **Purpose**: Interactive CLI entry point for terminal interaction.
 - **Workflow**:
   1. Initializes configuration, database schema, vector store, and embedding engine.
   2. Prompts user for User ID (creates a new user record in SQLite if left empty).
@@ -110,180 +151,103 @@ learn/
   4. Launches interactive command loop with `ChatAgent`.
 
 #### [`requirement.txt`](file:///c:/Users/dell/Documents/AI_agents/learn/requirement.txt)
-- **Purpose**: Specifies Python package dependencies:
-  - `openai`: Client for LLM and Embedding endpoints.
-  - `chromadb`: Vector database for semantic document search.
-  - `python-dotenv`: Environment variable management.
-  - `pydantic`: Structured memory data validation and parsing.
-  - `langchain` / `langgraph`: LLM framework dependencies.
+- **Purpose**: Specifies Python package dependencies (`fastapi`, `uvicorn`, `openai`, `chromadb`, `python-dotenv`, `pydantic`, `langchain`, etc.).
 
 ---
 
-### 🤖 Chatbot Agent Module (`app/chatbot/`)
+### 🌐 FastAPI REST API Layer (`api/`)
+
+#### [`api/main.py`](file:///c:/Users/dell/Documents/AI_agents/learn/api/main.py)
+- **Purpose**: Web server entry point powering the REST backend.
+- **Functionality**: Configures CORS middleware for frontend communication, initializes global dependencies, and registers sub-routers.
+
+#### [`api/dependencies.py`](file:///c:/Users/dell/Documents/AI_agents/learn/api/dependencies.py)
+- **Purpose**: Dependency injection module providing singleton instances of `ChatStore`, `LongTermMemory`, `ChatAgent`, and `AsyncTaskManager`.
+
+#### [`api/schemas.py`](file:///c:/Users/dell/Documents/AI_agents/learn/api/schemas.py)
+- **Purpose**: Data transfer validation schemas (Pydantic) for requests/responses (`UserResponse`, `ConversationResponse`, `MessageRequest`, `MessageResponse`, `MemoryRequest`, `MemoryResponse`, `TaskResponse`).
+
+#### [`api/routes/`](file:///c:/Users/dell/Documents/AI_agents/learn/api/routes/)
+- **`chat.py`**: POST endpoint `/api/chat/message` to send user inputs, execute dual-store retrieval, trigger LLM generation, and enqueue async background memory extraction.
+- **`conversations.py`**: Session management endpoints (`GET`, `POST`, `DELETE /api/conversations/{id}`).
+- **`memory.py`**: Memory CRUD routes (`GET /api/memory/{user_id}`, `POST /api/memory/{user_id}`, `DELETE /api/memory/{memory_id}`).
+- **`users.py`**: User CRUD endpoints (`GET /api/users`, `POST /api/users`, `DELETE /api/users/{user_id}`).
+- **`tasks.py`**: Task monitoring endpoints (`GET /api/tasks/{task_id}`, `GET /api/tasks/user/{user_id}`).
+- **`observability.py`**: System health metrics (`GET /api/observability/metrics`) and log stream endpoints.
+
+---
+
+### ⚡ Async Background Task Engine (`app/tasks/`)
+
+#### [`app/tasks/manager.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/tasks/manager.py)
+- **Class**: `AsyncTaskManager`
+- **Purpose**: Manages asynchronous, non-blocking background operations (memory extraction, summarization, vector indexing).
+- **Features**:
+  - **Thread Pool Execution**: Uses `ThreadPoolExecutor` to handle background LLM calls without delaying chat turn responses.
+  - **Task Lifecycles**: Tracks states (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`) with UUID task tracking.
+  - **Non-Blocking Chat Turn**: Immediate LLM response generation while heavy memory extraction runs asynchronously in the background.
+
+---
+
+### 💻 Modern Web UI Dashboard (`frontend/`)
+
+#### [`frontend/src/App.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/App.tsx)
+- **Purpose**: Main UI container managing active user state, session selection, sidebar drawer, and modal view states.
+
+#### Components (`frontend/src/components/`)
+- **[`Sidebar.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/Sidebar.tsx)**: User selector, session creation, chat session list, and session/user deletion triggers.
+- **[`ChatView.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/ChatView.tsx)**: Thread display, markdown rendering, turn response streaming, memory tag indicators, and quick prompt suggestions.
+- **[`MemoryInspector.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/MemoryInspector.tsx)**: Interactive slide-over modal for live LTM CRUD operations (filtering preferences, goals, facts, plans, decisions).
+- **[`ObservabilityPanel.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/ObservabilityPanel.tsx)**: Visual dashboard featuring cache hit rates, vector search latency distribution, background task status monitor, and structured log viewer.
+- **[`Header.tsx`](file:///c:/Users/dell/Documents/AI_agents/learn/frontend/src/components/Header.tsx)**: Dynamic token budget meter, user badge, and navigation triggers.
+
+---
+
+### 🤖 Chatbot Agent & Memory Modules (`app/chatbot/` & `app/memory/`)
 
 #### [`agent.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/chatbot/agent.py)
 - **Class**: `ChatAgent`
-- **Purpose**: Primary conversational orchestrator managing full interaction turns:
-  - **Context Loading**: Loads recent chat history and existing summary from SQLite (`load_context`).
-  - **Memory Retrieval**: Queries `LongTermMemory` using semantic vector search for relevant background facts/preferences.
-  - **Prompt Construction**: Uses `ContextManager` to compose system context (Summary + LTM Context + Short-term messages).
-  - **Response Generation**: Solicits LLM generation via `BaseLLM`.
-  - **Memory Extraction & Reversal**: Calls `MemoryExtractor` post-response to update dual storage (`SQLite` + `ChromaDB`) without blocking.
-  - **Session Summarization**: Automatically condenses conversation history when message limit threshold (10 messages) is reached.
+- **Purpose**: Primary conversational orchestrator managing context loading, memory retrieval, prompt construction, LLM completion, and memory persistence.
 
----
-
-### 🧠 Memory Management Modules (`app/memory/`)
-
-#### [`database.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/database.py)
-- **Class**: `Database`
-- **Purpose**: Manages SQLite connection and schema creation (`chatbot.db`).
-- **SQL Schema Definitions**:
-  - `users` Table:
-    - `id` (INTEGER PRIMARY KEY AUTOINCREMENT)
-    - `created_at` (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
-  - `conversations` Table:
-    - `id` (INTEGER PRIMARY KEY AUTOINCREMENT)
-    - `user_id` (FOREIGN KEY -> `users.id` ON DELETE CASCADE)
-    - `title` (TEXT), `summary` (TEXT), `created_at`, `updated_at`
-  - `messages` Table:
-    - `id` (INTEGER PRIMARY KEY AUTOINCREMENT)
-    - `conversation_id` (FOREIGN KEY -> `conversations.id` ON DELETE CASCADE)
-    - `role` (TEXT: 'user' | 'assistant'), `content` (TEXT), `created_at`
-  - `long_term_memories` Table:
-    - `id` (INTEGER PRIMARY KEY AUTOINCREMENT)
-    - `user_id` (FOREIGN KEY -> `users.id` ON DELETE CASCADE)
-    - `memory_type` (TEXT: 'preference' | 'goal' | 'fact' | 'plan' | 'decision')
-    - `key` (TEXT), `value` (TEXT), `scope` (TEXT), `created_at`, `updated_at`
-
-#### [`chat_store.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/chat_store.py)
-- **Class**: `ChatStore`
-- **Purpose**: Relational database operations layer for users, conversations, messages, and long-term memory CRUD in SQLite.
-- **Key Methods**:
-  - `create_user()`, `get_user()`
-  - `create_conversation()`, `get_user_conversations()`, `update_summary()`, `get_summary()`
-  - `save_message()`, `get_recent_messages()`
-  - `save_memory()`, `find_memory()`, `update_memory()`, `get_memories()`, `delete_memory()`
-
-#### [`short_term.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/short_term.py)
-- **Class**: `ShortTermMemory`
-- **Purpose**: Manages volatile in-memory chat session history buffer for the current turn.
-
-#### [`sumarizer.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/sumarizer.py)
-- **Class**: `Summarizer`
-- **Purpose**: Uses LLM prompt to summarize older messages into a rolling single summary string when short-term message count exceeds 10 turns.
-
-#### [`context_manager.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/context_manager.py)
-- **Class**: `ContextManager`
-- **Purpose**: Assembles full context message structure for LLM API calls.
-- **Prompt Structure Format**:
-  ```json
-  [
-    {
-      "role": "system",
-      "content": "Conversation summary:\n<summary>\n\nRelevant User Long-Term Memory & Preferences:\n- PREFERENCE [favorite_subject]: user prefers Machine Learning over DSA"
-    },
-    { "role": "user", "content": "Recent turn message..." },
-    { "role": "user", "content": "Current user prompt" }
-  ]
-  ```
+#### [`database.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/database.py) & [`chat_store.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/chat_store.py)
+- **Classes**: `Database`, `ChatStore`
+- **Purpose**: SQLite schema definition and relational CRUD store (`users`, `conversations`, `messages`, `long_term_memories`).
 
 #### [`extractor.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/extractor.py)
 - **Classes**: `MemoryType` (Enum), `Memory` (Pydantic model), `MemoryExtractor`
-- **Purpose**: Analyzes user messages using LLM structured extraction to identify long-term memory facts.
-- **Extracted Memory Schema (JSON)**:
-  ```json
-  {
-    "memories": [
-      {
-        "memory_type": "preference",
-        "key": "favorite_subject",
-        "value": "user prefers Machine Learning over DSA",
-        "scope": null
-      }
-    ]
-  }
-  ```
-- **Supported Memory Types**:
-  - `preference`: Likes, dislikes, favorite topics/languages.
-  - `goal`: Short/long term ambitions (e.g. cracking SDE interviews).
-  - `fact`: User attributes (e.g. student status, location).
-  - `plan`: Scheduled or intended upcoming actions.
-  - `decision`: Explicit decisions made by the user.
+- **Supported Memory Types**: `preference`, `goal`, `fact`, `plan`, `decision`. Supports extraction of both new memories and explicit forget/deletion directives.
 
 #### [`long_term.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/memory/long_term.py)
 - **Class**: `LongTermMemory`
-- **Purpose**: Orchestrates dual storage synchronization across SQLite database and ChromaDB vector store.
-- **Memory Reversal / In-Place Update Logic**:
-  - When saving a memory, `find_memory` checks if a record for `(user_id, memory_type, key, scope)` exists in SQLite.
-  - **If found**: Updates SQLite row value AND performs ChromaDB `.upsert()` using existing memory ID, preventing duplicate conflicting preference entries.
-  - **If not found**: Inserts new record into SQLite AND calls ChromaDB `.add()`.
-- **Atomic Memory Deletion**:
-  - Supports `delete_memory(id)`, `delete_memory_by_key(type, key, scope)`, and `delete_all_memories()`, synchronizing deletions across SQLite and ChromaDB vector collection.
-- **Hybrid Retrieval (Vector + Keyword Search with RRF)**:
-  - Merges dense vector embeddings from ChromaDB and metadata/keyword search ranks from SQLite using Reciprocal Rank Fusion (RRF).
+- **Purpose**: Dual-store manager synchronizing SQLite and ChromaDB vector store.
+- **Features**:
+  - **Memory Reversal / In-Place Updates**: Replaces old entries when user preferences change (e.g. from "likes Python" to "prefers Rust") avoiding duplicate contradictory facts.
+  - **Atomic Deletions**: Deletes memory entries by ID, key/type/scope, or bulk user wipe across SQLite and ChromaDB.
+  - **Hybrid Retrieval (Vector + Keyword Search with RRF)**: Merges dense vector semantic search with SQLite metadata & keyword search using Reciprocal Rank Fusion (RRF).
 
 ---
 
-### 🧬 Embeddings & Vector Store Modules (`app/embeddings/` & `app/vector_store/`)
+### 🧪 Unit & Integration Test Suite (`tests/`)
 
-#### [`embeddings/base.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/embeddings/base.py) & [`openai_embedding.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/embeddings/openai_embedding.py)
-- **Classes**: `EmbeddingModel` (Abstract Base), `OpenAIEmbedding`
-- **Purpose**: Interface and implementation for generating dense vector embeddings via OpenAI API (`text-embedding-3-small`, 1536 dimensions).
-
-#### [`vector_store/base.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/vector_store/base.py) & [`chroma_store.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/vector_store/chroma_store.py)
-- **Classes**: `VectorStore` (Abstract Base), `ChromaVectorStore`
-- **Purpose**: Wraps ChromaDB `PersistentClient` for storing and retrieving high-dimensional embeddings.
-- **ChromaDB Document Metadata Format**:
-  ```json
-  {
-    "id": "1",
-    "document": "PREFERENCE [favorite_subject]: user prefers Machine Learning over DSA",
-    "metadata": {
-      "user_id": 1,
-      "memory_type": "preference",
-      "key": "favorite_subject",
-      "scope": ""
-    }
-  }
-  ```
-
----
-
-### 🤖 LLM Models Abstraction (`app/models/`)
-
-#### [`models/base.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/models/base.py), [`openai_model.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/models/openai_model.py), [`factory.py`](file:///c:/Users/dell/Documents/AI_agents/learn/app/models/factory.py)
-- **Classes**: `LLM` (Abstract Base), `OpenAIModel`, `ModelFactory`
-- **Purpose**: Provides decoupled interface and factory for model instantiation, supporting provider switching (`openai`, etc.).
-
----
-
-### 🧪 Unit Test Suite (`tests/`)
-
-#### [`test_long_term_memory.py`](file:///c:/Users/dell/Documents/AI_agents/learn/tests/test_long_term_memory.py)
-- **Class**: `TestLongTermMemory`
-- **Purpose**: Standardized unit test suite for dual-store long-term memory operations:
-  - `test_add_and_retrieve_memory`: Validates SQLite storage & vector similarity search.
-  - `test_memory_reversal_and_update`: Validates memory reversal and in-place update consistency across both stores.
-  - `test_memory_extractor_parsing`: Validates LLM JSON output cleaning and Pydantic model parsing.
-  - `test_delete_memory_by_id`: Validates single memory deletion across both stores.
-  - `test_delete_memory_by_key`: Validates deletion by metadata key across both stores.
-  - `test_delete_all_memories`: Validates clearing all user memories across both stores.
-  - `test_hybrid_retrieval_and_rrf`: Validates hybrid vector & keyword retrieval using Reciprocal Rank Fusion.
-  - `test_memory_extractor_deletion_parsing`: Validates LLM extraction of delete instructions.
+- **`test_api_endpoints.py`**: End-to-end integration test suite verifying user endpoints, session endpoints, chat messaging, memory management, and deletion cascades.
+- **`test_async_tasks.py`**: Unit tests for task creation, worker thread pool execution, background memory processing, and status lifecycle polling.
+- **`test_long_term_memory.py`**: Tests for dual-store insertion, vector retrieval, memory reversal updates, RRF hybrid search, and atomic memory deletion.
+- **`test_caching.py`**: Unit tests for TTLCache, vector embedding caching, and memory query cache invalidation.
+- **`test_context_manager.py`**: Unit tests for prompt context assembly, token budgeting, dynamic turn pruning, and memory formatting.
+- **`test_observability.py`**: Unit tests for structured JSON logging, metrics metrics collection, exponential backoff retries, and fallback mechanisms.
 
 ---
 
 ## 🚀 Quick Start Guide
 
 ### 1. Requirements & Environment Setup
-Ensure Python 3.10+ is installed. Clone the repository and configure `.env`:
+Ensure Python 3.10+ and Node.js 18+ are installed. Clone the repository and copy `.env`:
 
 ```bash
 cp ".env .expamle" .env
 ```
 
-Add your OpenAI API key in `.env`:
+Configure your OpenAI credentials in `.env`:
 ```env
 PROVIDER=openai
 OPENAI_API_KEY=your_openai_api_key_here
@@ -293,17 +257,57 @@ CHROMA_PATH=./chroma_db
 TEMPERATURE=0.7
 ```
 
+---
+
 ### 2. Install Dependencies
+
+#### Python Backend Dependencies:
 ```bash
 pip install -r requirement.txt
 ```
 
-### 3. Run Automated Unit Tests
+#### Frontend Web Dependencies:
 ```bash
+cd frontend
+npm install
+cd ..
+```
+
+---
+
+### 3. Run Automated Unit & Integration Tests
+Run the entire test suite across all modules:
+
+```bash
+python -m unittest discover tests
+```
+
+Or run individual test modules:
+```bash
+python tests/test_api_endpoints.py
+python tests/test_async_tasks.py
 python tests/test_long_term_memory.py
 ```
 
-### 4. Launch Interactive Chat Session
+---
+
+### 4. Running the Application
+
+#### Option A: Full-Stack Web App (FastAPI REST Backend + React Dashboard)
+
+1. **Start the FastAPI Backend Server**:
+   ```bash
+   python -m uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
+   ```
+
+2. **Start the React Frontend Dev Server**:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+   Open your browser at `http://localhost:5173`.
+
+#### Option B: Terminal Interactive CLI Mode
 ```bash
 python app/main.py
 ```
@@ -311,13 +315,14 @@ python app/main.py
 ---
 
 ## 📌 Summary of Features Implemented
-- ✅ **Multi-Level Caching Architecture**: In-Memory `TTLCache` store with capacity eviction, SHA-256 `CachedEmbeddingModel` for 0ms embedding lookups, and user-level `MemoryQueryCache` with automated cache invalidation upon memory mutation.
+
+- ✅ **FastAPI REST Service Layer**: Production API exposing clean REST endpoints for chat interaction, conversation management, user memory CRUD, async task tracking, and live observability metrics.
+- ✅ **Async Background Task Worker Pipeline**: Non-blocking memory extraction and background indexing via `AsyncTaskManager`, keeping chat turn response latency ultra-low.
+- ✅ **Full-Featured React + TypeScript Web Dashboard**: Modern dark-themed glassmorphism interface featuring session sidebars, visual memory inspector drawers, live background task tracking, and observability analytics.
+- ✅ **Multi-Level Caching Architecture**: In-memory `TTLCache`, SHA-256 `CachedEmbeddingModel` for 0ms vector embedding lookups, and user-level `MemoryQueryCache` with automated cache invalidation upon memory mutation.
 - ✅ **Observability & Reliability Framework**: Structured JSON/Console logging with Trace IDs, operational metrics tracking (LLM latency, embedding calls, memory hit rate), exponential backoff retries (`retry_with_backoff`), and safe vector degradation.
-- ✅ **Dual-Store Synchronization**: Relational integrity via SQLite + High performance semantic retrieval via ChromaDB.
+- ✅ **Dual-Store Synchronization**: Relational integrity via SQLite + high-performance semantic vector retrieval via ChromaDB.
 - ✅ **Context Engineering Engine**: Dynamic prompt assembly, token budgeting, memory categorization (*Preferences*, *Goals*, *Facts*, *Plans*, *Decisions*), dynamic turn pruning, and context stats analytics.
-- ✅ **Long-Term Memory Deletion**: Purges memory entries by ID, key/type/scope, or bulk user wipe across SQLite and ChromaDB.
-- ✅ **Automated Deletion Extraction**: `MemoryExtractor` detects forget/delete requests ("Forget my location") and executes deletions.
+- ✅ **Long-Term Memory Deletion & Automated Extraction**: Purges memory entries by ID, key/type/scope, or bulk user wipe across SQLite and ChromaDB, with automatic deletion detection ("Forget my location").
 - ✅ **Hybrid Retrieval (Vector + Keyword RRF)**: Merges dense vector semantic search with SQLite metadata & keyword search using Reciprocal Rank Fusion (RRF).
 - ✅ **Memory Reversal / In-Place Updates**: Prevents duplicate or contradictory preference entries when user facts change over time.
-- ✅ **Metadata Scoped Vector Queries**: Vector search is strictly scoped to the active `user_id`.
-- ✅ **Rolling Summarization**: Maintains efficient context lengths by summarizing overflow turns in short-term chat memory.
