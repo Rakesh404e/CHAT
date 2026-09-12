@@ -293,7 +293,35 @@ python tests/test_long_term_memory.py
 
 ### 4. Running the Application
 
-#### Option A: Full-Stack Web App (FastAPI REST Backend + React Dashboard)
+#### Option A: One-Command Docker Deployment (Recommended 🐳)
+
+Ensure your `.env` file exists with your `OPENAI_API_KEY`, then build and run the entire stack with Docker Compose:
+
+```bash
+# Build and launch backend and frontend containers
+docker compose up --build -d
+```
+
+- **Frontend Dashboard**: `http://localhost:5173`
+- **FastAPI REST API**: `http://localhost:8000`
+- **Interactive Swagger Docs**: `http://localhost:8000/docs`
+
+> [!TIP]
+> The SQLite database and ChromaDB vector store are automatically stored in the persistent Docker named volume `backend_data`, keeping your memories safe across container rebuilds.
+
+To view logs or stop the containers:
+```bash
+# View real-time logs across services
+docker compose logs -f
+
+# Stop containers
+docker compose down
+
+# Stop containers and wipe database/vector volumes
+docker compose down -v
+```
+
+#### Option B: Local Full-Stack Web App (FastAPI REST Backend + React Dashboard)
 
 1. **Start the FastAPI Backend Server**:
    ```bash
@@ -307,7 +335,7 @@ python tests/test_long_term_memory.py
    ```
    Open your browser at `http://localhost:5173`.
 
-#### Option B: Terminal Interactive CLI Mode
+#### Option C: Terminal Interactive CLI Mode
 ```bash
 python app/main.py
 ```

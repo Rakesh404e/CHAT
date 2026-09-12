@@ -1,0 +1,48 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-agent-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_PATH=/app/data/chatbot.db
+      - CHROMA_PATH=/app/data/chroma_db
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - backend_data:/app/data
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - ai-agent-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-agent-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - ai-agent-network
+
+volumes:
+  backend_data:
+    name: ai_agent_backend_data
+
+networks:
+  ai-agent-network:
+    name: ai_agent_network
+    driver: bridge

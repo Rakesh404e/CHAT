@@ -22,7 +22,8 @@ from tasks.manager import task_manager
 class AppServices:
     def __init__(self):
         self.config = Config()
-        self.database = Database(db_path=os.path.join(app_dir, "chatbot.db"))
+        db_path = os.getenv("DATABASE_PATH", os.path.join(app_dir, "chatbot.db"))
+        self.database = Database(db_path=db_path)
         self.database.initialize()
         self.chat_store = ChatStore(self.database)
         
@@ -31,7 +32,8 @@ class AppServices:
 
         # Models and Embeddings
         self.model = ModelFactory.create(self.config)
-        self.vector_store = ChromaVectorStore(path=os.path.join(app_dir, "chroma_db"))
+        chroma_path = os.getenv("CHROMA_PATH", os.path.join(app_dir, "chroma_db"))
+        self.vector_store = ChromaVectorStore(path=chroma_path)
         self.embedding_model = OpenAIEmbedding(
             api_key=self.config.api_key,
             model=self.config.embedding_model

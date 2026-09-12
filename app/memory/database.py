@@ -1,13 +1,16 @@
 import sqlite3
 import os
 
-DEFAULT_DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "chatbot.db"))
+DEFAULT_DB_PATH = os.getenv("DATABASE_PATH") or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "chatbot.db"))
 
 
 class Database:
 
     def __init__(self, db_path=None):
-        self.db_path = os.path.abspath(db_path) if db_path else DEFAULT_DB_PATH
+        self.db_path = os.path.abspath(db_path) if db_path else (os.getenv("DATABASE_PATH") or DEFAULT_DB_PATH)
+        db_dir = os.path.dirname(self.db_path)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
         self.initialize()
 
     def get_connection(self):

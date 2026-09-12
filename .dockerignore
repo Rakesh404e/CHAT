@@ -1,0 +1,45 @@
+# Virtual Environments
+myenv/
+.venv/
+venv/
+env/
+
+# Dependencies & Build Output
+node_modules/
+frontend/
+dist/
+build/
+
+# Bytecode and Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local Databases & Vector Stores (mounted via volume at runtime)
+chatbot.db
+app/chatbot.db
+*.db
+*.sqlite
+*.sqlite3
+chroma_db/
+app/chroma_db/
+
+# Version Control
+.git/
+.gitignore
+.agents/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.local
+.env.*.local
+*.pem
