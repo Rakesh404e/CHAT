@@ -24,8 +24,9 @@ class ContextManager:
         max_history_tokens: int = 2048
     ):
         self.system_instructions = system_instructions or (
-            "You are a helpful, intelligent AI Assistant with access to user long-term memories."
+            "You are a helpful, intelligent AI Assistant powered by Groq high-speed inference engine with access to user long-term memories."
         )
+
         self.max_total_tokens = max_total_tokens
         self.max_memory_tokens = max_memory_tokens
         self.max_history_tokens = max_history_tokens

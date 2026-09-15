@@ -29,6 +29,10 @@ class Summarizer:
         response = self.model.generate([
             {
                 "role": "system",
+                "content": "You are a conversational AI summarizer that produces clear, structured summaries of user interactions."
+            },
+            {
+                "role": "user",
                 "content": prompt
             }
         ])

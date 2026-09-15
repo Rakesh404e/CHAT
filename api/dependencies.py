@@ -14,7 +14,7 @@ from memory.short_term import ShortTermMemory
 from memory.long_term import LongTermMemory
 from memory.extractor import MemoryExtractor
 from vector_store.chroma_store import ChromaVectorStore
-from embeddings.openai_embedding import OpenAIEmbedding
+from embeddings.factory import EmbeddingFactory
 from chatbot.agent import ChatAgent
 from tasks.manager import task_manager
 
@@ -34,11 +34,9 @@ class AppServices:
         self.model = ModelFactory.create(self.config)
         chroma_path = os.getenv("CHROMA_PATH", os.path.join(app_dir, "chroma_db"))
         self.vector_store = ChromaVectorStore(path=chroma_path)
-        self.embedding_model = OpenAIEmbedding(
-            api_key=self.config.api_key,
-            model=self.config.embedding_model
-        )
+        self.embedding_model = EmbeddingFactory.create(self.config)
         self.extractor = MemoryExtractor(model=self.model)
+
 
     def get_long_term_memory(self, user_id: int) -> LongTermMemory:
         return LongTermMemory(

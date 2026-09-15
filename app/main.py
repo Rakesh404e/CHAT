@@ -7,7 +7,7 @@ from memory.short_term import ShortTermMemory
 from memory.long_term import LongTermMemory
 from memory.extractor import MemoryExtractor
 from vector_store.chroma_store import ChromaVectorStore
-from embeddings.openai_embedding import OpenAIEmbedding
+from embeddings.factory import EmbeddingFactory
 
 
 def main():
@@ -32,7 +32,8 @@ def main():
 
     # Vector store and embedding model initialization
     vector_store = ChromaVectorStore(path=config.chroma_path)
-    embedding_model = OpenAIEmbedding(api_key=config.api_key, model=config.embedding_model)
+    embedding_model = EmbeddingFactory.create(config)
+
 
     # Unified LongTermMemory Manager
     long_term_memory = LongTermMemory(
