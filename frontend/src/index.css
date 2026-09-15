@@ -1,28 +1,30 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
-    --color-ink: #171717;
-    --color-body: #4d4d4d;
-    --color-mute: #8f8f8f;
-    --color-faint: #a1a1a1;
-    --color-canvas: #fafafa;
+    --color-ink: #0f172a;
+    --color-body: #334155;
+    --color-mute: #64748b;
+    --color-faint: #94a3b8;
+    --color-canvas: #f8fafc;
     --color-canvas-elevated: #ffffff;
-    --color-hairline: #ebebeb;
-    --color-hairline-soft: #f2f2f2;
-    --color-link: #0070f3;
+    --color-hairline: #e2e8f0;
+    --color-hairline-soft: #f1f5f9;
+    --color-link: #0284c7;
   }
 
   .dark {
-    --color-ink: #ededed;
-    --color-body: #a1a1a1;
-    --color-mute: #737373;
-    --color-faint: #525252;
-    --color-canvas: #0a0a0a;
-    --color-canvas-elevated: #121212;
-    --color-hairline: #262626;
-    --color-hairline-soft: #1a1a1a;
-    --color-link: #0070f3;
+    --color-ink: #f8fafc;
+    --color-body: #cbd5e1;
+    --color-mute: #94a3b8;
+    --color-faint: #64748b;
+    --color-canvas: #090d16;
+    --color-canvas-elevated: #0f172a;
+    --color-hairline: #1e293b;
+    --color-hairline-soft: #141e33;
+    --color-link: #38bdf8;
   }
 
   body {
@@ -35,6 +37,7 @@
     font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 }
+
 
 /* Custom Mesh Hero Gradient */
 .mesh-gradient {

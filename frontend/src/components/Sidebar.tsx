@@ -125,12 +125,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Conversations Section */}
       <div className="p-3 flex items-center justify-between">
-        <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--color-mute)]">
+        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-600 dark:text-neutral-400 font-semibold">
           Sessions
         </span>
         <button
           onClick={onCreateConversation}
-          className="flex items-center space-x-1 px-2.5 py-1 text-xs font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-full hover:opacity-90 transition-opacity shadow-sm"
+          className="flex items-center space-x-1 px-2.5 py-1 text-xs font-medium text-white bg-neutral-950 hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200 rounded-full transition-colors shadow-sm"
           title="New Conversation"
         >
           <Plus className="h-3 w-3" />
@@ -141,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Conversations List */}
       <div className="flex-1 overflow-y-auto px-2 space-y-1">
         {conversations.length === 0 ? (
-          <div className="p-4 text-center text-xs text-[var(--color-mute)] italic">
+          <div className="p-4 text-center text-xs text-neutral-500 dark:text-neutral-400 italic">
             No active chat sessions found. Click 'New' to start.
           </div>
         ) : (
@@ -153,21 +153,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => onSelectConversation(conv.id)}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-xs transition-all text-left group border cursor-pointer ${
                   isActive
-                    ? 'border-[var(--color-hairline)] bg-[var(--color-canvas-elevated)] font-medium text-neutral-900 dark:text-white shadow-xs'
-                    : 'border-transparent text-[var(--color-body)] hover:bg-neutral-100 dark:hover:bg-neutral-800/40'
+                    ? 'border-neutral-300 dark:border-neutral-700 bg-[var(--color-canvas-elevated)] font-medium text-neutral-950 dark:text-white shadow-xs'
+                    : 'border-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200/60 hover:text-neutral-950 dark:hover:bg-neutral-800/60 dark:hover:text-white'
                 }`}
               >
                 <div className="flex flex-col items-start truncate flex-1 mr-1">
                   <div className="flex items-center space-x-2 w-full truncate">
-                    <MessageSquare className={`h-3.5 w-3.5 flex-shrink-0 ${isActive ? 'text-blue-500' : 'text-[var(--color-mute)]'}`} />
-                    <span className="truncate font-sans">{conv.title || `Conversation ${conv.id}`}</span>
+                    <MessageSquare className={`h-3.5 w-3.5 flex-shrink-0 ${isActive ? 'text-blue-500' : 'text-neutral-400 dark:text-neutral-500'}`} />
+                    <span className="truncate font-sans font-medium">{conv.title || `Conversation ${conv.id}`}</span>
                   </div>
                   {conv.summary && (
-                    <p className="mt-1 text-[11px] text-[var(--color-mute)] line-clamp-1 pl-5 font-mono">
+                    <p className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-1 pl-5 font-mono">
                       {conv.summary}
                     </p>
                   )}
                 </div>
+
                 {onDeleteConversation && (
                   <button
                     onClick={(e) => {

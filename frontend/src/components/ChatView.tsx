@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User as UserIcon, Sparkles, Clock, Hash, CheckCircle, Terminal, Trash2 } from 'lucide-react';
 import { Message, ChatResponse } from '../services/api';
+import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface ChatViewProps {
   messages: Message[];
@@ -50,10 +51,10 @@ export const ChatView: React.FC<ChatViewProps> = ({
       {/* Mesh Gradient Top Banner */}
       <div className="mesh-gradient dark:mesh-gradient-dark border-b border-[var(--color-hairline)] px-6 py-4 flex items-center justify-between">
         <div>
-          <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--color-mute)] block">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-600 dark:text-neutral-400 font-semibold block">
             SESSION CONTEXT
           </span>
-          <h2 className="text-lg font-semibold tracking-tight text-neutral-900 dark:text-white">
+          <h2 className="text-lg font-semibold tracking-tight text-neutral-950 dark:text-white">
             {currentConversationTitle || 'Active Chat Turn'}
           </h2>
         </div>
@@ -61,7 +62,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         <div className="flex items-center space-x-3">
           {/* Telemetry quick metrics */}
           {lastChatResponse && (
-            <div className="hidden md:flex items-center space-x-3 text-xs font-mono text-[var(--color-body)] bg-[var(--color-canvas-elevated)]/80 px-3 py-1.5 rounded-md border border-[var(--color-hairline)] backdrop-blur-xs">
+            <div className="hidden md:flex items-center space-x-3 text-xs font-mono text-neutral-700 dark:text-neutral-300 bg-[var(--color-canvas-elevated)]/90 px-3 py-1.5 rounded-md border border-[var(--color-hairline)] shadow-xs">
               <div className="flex items-center space-x-1">
                 <Clock className="h-3.5 w-3.5 text-blue-500" />
                 <span>{Math.round(lastChatResponse.duration_ms)}ms</span>
@@ -87,7 +88,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   onDeleteConversation();
                 }
               }}
-              className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 border border-[var(--color-hairline)] rounded-md transition-colors"
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 border border-neutral-300 dark:border-neutral-700 rounded-md transition-colors"
               title="Delete Active Session"
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -104,8 +105,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
             <div className="h-12 w-12 rounded-full bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 flex items-center justify-center font-bold text-lg mb-4 shadow-md">
               ▲
             </div>
-            <h3 className="text-xl font-semibold tracking-tight mb-2">How can I assist you today?</h3>
-            <p className="text-xs text-[var(--color-mute)] max-w-md mb-6 leading-relaxed">
+            <h3 className="text-xl font-semibold tracking-tight mb-2 text-neutral-950 dark:text-white">How can I assist you today?</h3>
+            <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md mb-6 leading-relaxed font-medium">
               Equipped with persistent long-term memory, semantic vector search via ChromaDB, and automatic entity extraction.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
@@ -118,7 +119,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 <button
                   key={idx}
                   onClick={() => onSendMessage(prompt)}
-                  className="hairline-card p-3 text-left text-xs text-[var(--color-body)] hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-all font-mono"
+                  className="hairline-card p-3 text-left text-xs text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all font-mono shadow-xs"
                 >
                   "{prompt}"
                 </button>
@@ -126,6 +127,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
             </div>
           </div>
         ) : (
+
           messages.map((msg, index) => {
             const isUser = msg.role === 'user';
             return (
@@ -140,22 +142,25 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 )}
 
                 <div
-                  className={`max-w-[85%] sm:max-w-[75%] rounded-xl px-4 py-3 text-xs sm:text-sm leading-relaxed ${
+                  className={`rounded-xl px-4 py-3 text-xs sm:text-sm leading-relaxed ${
                     isUser
-                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 rounded-br-xs shadow-xs'
-                      : 'hairline-card text-neutral-900 dark:text-neutral-100 rounded-bl-xs'
+                      ? 'max-w-[85%] sm:max-w-[75%] bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 rounded-br-xs shadow-xs'
+                      : 'w-full max-w-[95%] sm:max-w-[85%] hairline-card text-neutral-900 dark:text-neutral-100 rounded-bl-xs'
                   }`}
                 >
                   {/* Role Header */}
-                  <div className={`text-[10px] font-mono mb-1 flex items-center justify-between ${isUser ? 'text-neutral-300 dark:text-neutral-600' : 'text-[var(--color-mute)]'}`}>
+                  <div className={`text-[10px] font-mono mb-1.5 flex items-center justify-between ${isUser ? 'text-neutral-300 dark:text-neutral-600' : 'text-[var(--color-mute)]'}`}>
                     <span>{isUser ? 'You' : 'Agent Assistant'}</span>
                   </div>
 
                   {/* Message Content */}
-                  <div className="whitespace-pre-wrap font-sans break-words">
-                    {msg.content}
-                  </div>
+                  {isUser ? (
+                    <div className="whitespace-pre-wrap font-sans break-words">{msg.content}</div>
+                  ) : (
+                    <MarkdownRenderer content={msg.content} />
+                  )}
                 </div>
+
 
                 {isUser && (
                   <div className="h-7 w-7 rounded-full bg-neutral-200 dark:bg-neutral-800 text-[var(--color-body)] flex items-center justify-center text-xs flex-shrink-0 mt-0.5 font-bold">
@@ -175,7 +180,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
             </div>
             <div className="hairline-card px-4 py-3 rounded-xl rounded-bl-xs flex items-center space-x-2">
               <div className="h-2 w-2 rounded-full bg-blue-500 animate-ping"></div>
-              <span className="text-xs font-mono text-[var(--color-mute)]">Agent is reasoning & searching long-term memory...</span>
+              <span className="text-xs font-mono text-neutral-600 dark:text-neutral-400 font-medium">Agent is reasoning & searching long-term memory...</span>
             </div>
           </div>
         )}
@@ -192,21 +197,22 @@ export const ChatView: React.FC<ChatViewProps> = ({
             placeholder="Ask a question or share a fact to remember..."
             rows={1}
             disabled={loading}
-            className="w-full pl-4 pr-24 py-3 text-xs sm:text-sm bg-[var(--color-canvas-elevated)] text-[var(--color-ink)] border border-[var(--color-hairline)] rounded-xl focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 resize-none shadow-xs transition-all placeholder:text-[var(--color-faint)]"
+            className="w-full pl-4 pr-24 py-3 text-xs sm:text-sm bg-[var(--color-canvas-elevated)] text-neutral-950 dark:text-neutral-100 border border-[var(--color-hairline)] rounded-xl focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 resize-none shadow-xs transition-all placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
           />
           <button
             type="submit"
             disabled={loading || !inputText.trim()}
-            className="absolute right-2 px-4 py-1.5 bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 font-medium text-xs rounded-full hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center space-x-1.5 shadow-sm"
+            className="absolute right-2 px-4 py-1.5 bg-neutral-950 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200 font-medium text-xs rounded-full disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center space-x-1.5 shadow-sm"
           >
             <span>Send</span>
             <Send className="h-3 w-3" />
           </button>
         </form>
-        <div className="max-w-4xl mx-auto mt-2 text-center text-[10px] font-mono text-[var(--color-mute)]">
-          Press <kbd className="px-1 py-0.5 bg-[var(--color-hairline-soft)] rounded border border-[var(--color-hairline)]">Enter</kbd> to send, <kbd className="px-1 py-0.5 bg-[var(--color-hairline-soft)] rounded border border-[var(--color-hairline)]">Shift+Enter</kbd> for new line
+        <div className="max-w-4xl mx-auto mt-2 text-center text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
+          Press <kbd className="px-1 py-0.5 bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border border-neutral-300 dark:border-neutral-700">Enter</kbd> to send, <kbd className="px-1 py-0.5 bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border border-neutral-300 dark:border-neutral-700">Shift+Enter</kbd> for new line
         </div>
       </div>
     </div>
+
   );
 };

@@ -85,7 +85,7 @@ export const ObservabilityPanel: React.FC = () => {
         <button
           onClick={fetchMetricsAndTasks}
           disabled={loading}
-          className="px-3 py-1.5 text-xs font-medium border border-[var(--color-hairline)] rounded-md bg-[var(--color-canvas-elevated)] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center space-x-1.5"
+          className="px-3 py-1.5 text-xs font-medium text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white border border-[var(--color-hairline)] rounded-md bg-[var(--color-canvas-elevated)] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center space-x-1.5 shadow-xs"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
           <span>Refresh Metrics</span>
@@ -222,8 +222,8 @@ export const ObservabilityPanel: React.FC = () => {
                 <Zap className="h-4 w-4 text-amber-500" />
                 <span className="font-semibold text-sm">LLM Generation Telemetry</span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-                GPT Core
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300 uppercase font-semibold">
+                {data.provider ? `${data.provider} Core` : 'LLM Core'}
               </span>
             </div>
 

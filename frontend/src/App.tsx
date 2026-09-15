@@ -19,7 +19,8 @@ export const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastChatResponse, setLastChatResponse] = useState<ChatResponse | null>(null);
-  const [modelName, setModelName] = useState('gpt-4o-mini');
+  const [modelName, setModelName] = useState('groq/compound-mini');
+  const [provider, setProvider] = useState('groq');
 
   // Sync dark mode class
   useEffect(() => {
@@ -30,7 +31,7 @@ export const App: React.FC = () => {
     }
   }, [darkMode]);
 
-  // Initial user loading
+  // Initial user loading & model telemetry
   useEffect(() => {
     const initUsers = async () => {
       try {
@@ -47,8 +48,26 @@ export const App: React.FC = () => {
         console.error('Failed to initialize users:', err);
       }
     };
+
+    const fetchSystemInfo = async () => {
+      try {
+        const data = await api.getMetrics();
+        if (data.model_name) {
+          setModelName(data.model_name);
+        }
+        if (data.provider) {
+          setProvider(data.provider);
+        }
+      } catch (err) {
+        console.error('Failed to fetch active model:', err);
+      }
+    };
+
     initUsers();
+    fetchSystemInfo();
   }, []);
+
+
 
   // Fetch conversations when user changes
   useEffect(() => {
@@ -211,7 +230,9 @@ export const App: React.FC = () => {
         setActiveTab={setActiveTab}
         userId={currentUserId}
         modelName={modelName}
+        provider={provider}
       />
+
 
       <div className="flex-1 flex overflow-hidden">
         {activeTab === 'chat' && (

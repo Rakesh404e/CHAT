@@ -97,7 +97,7 @@ export const MemoryInspector: React.FC<MemoryInspectorProps> = ({ userId }) => {
           <button
             onClick={fetchMemories}
             disabled={loading}
-            className="px-3 py-1.5 text-xs font-medium border border-[var(--color-hairline)] rounded-md bg-[var(--color-canvas-elevated)] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center space-x-1.5"
+            className="px-3 py-1.5 text-xs font-medium text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white border border-[var(--color-hairline)] rounded-md bg-[var(--color-canvas-elevated)] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center space-x-1.5 shadow-xs"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
@@ -106,7 +106,7 @@ export const MemoryInspector: React.FC<MemoryInspectorProps> = ({ userId }) => {
           <button
             onClick={handleClearAll}
             disabled={memories.length === 0}
-            className="px-3 py-1.5 text-xs font-medium text-red-600 border border-red-200 dark:border-red-900/50 rounded-md bg-red-50 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors flex items-center space-x-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 text-xs font-medium text-red-600 border border-red-200 dark:border-red-900/50 rounded-md bg-red-50 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors flex items-center space-x-1.5 disabled:opacity-40 disabled:cursor-not-allowed shadow-xs"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>Clear All</span>
@@ -135,13 +135,13 @@ export const MemoryInspector: React.FC<MemoryInspectorProps> = ({ userId }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search user memories semantically (e.g. 'what is my name?' or 'tech stack')..."
-              className="w-full pl-9 pr-3 py-2 text-xs bg-[var(--color-canvas)] border border-[var(--color-hairline)] rounded-md font-mono focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full pl-9 pr-3 py-2 text-xs bg-[var(--color-canvas)] text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 border border-[var(--color-hairline)] rounded-md font-mono focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
           <button
             type="submit"
             disabled={searching || !searchQuery.trim()}
-            className="px-4 py-2 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-medium rounded-md hover:opacity-90 disabled:opacity-40"
+            className="px-4 py-2 bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-medium rounded-md transition-colors disabled:opacity-40 shadow-xs"
           >
             {searching ? 'Searching...' : 'Run Vector Search'}
           </button>
