@@ -1,0 +1,1272 @@
+[
+  {
+    "metric": "total_queries",
+    "value": 60,
+    "unit": "count",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": "Synthetic evaluation dataset"
+  },
+  {
+    "metric": "recall_at_1",
+    "value": 71.67,
+    "unit": "percent",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "recall_at_3",
+    "value": 81.67,
+    "unit": "percent",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "recall_at_5",
+    "value": 86.67,
+    "unit": "percent",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "mrr",
+    "value": 0.7728,
+    "unit": "score",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "zero_retrieval_queries",
+    "value": 0,
+    "unit": "count",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "user_isolation_failures",
+    "value": 0,
+    "unit": "count",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "avg_retrieved_memories",
+    "value": 5.0,
+    "unit": "count",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "retrieval_latency_p50",
+    "value": 22.6,
+    "unit": "ms",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "retrieval_latency_p95",
+    "value": 35.33,
+    "unit": "ms",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "retrieval_latency_p99",
+    "value": 73.27,
+    "unit": "ms",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "retrieval_latency_mean",
+    "value": 23.38,
+    "unit": "ms",
+    "benchmark_name": "retrieval",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:41:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_total_samples",
+    "value": 60,
+    "unit": "count",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_accuracy",
+    "value": 50.0,
+    "unit": "percent",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_precision",
+    "value": 95.24,
+    "unit": "percent",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_recall",
+    "value": 40.82,
+    "unit": "percent",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_f1",
+    "value": 57.15,
+    "unit": "percent",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "true_positives",
+    "value": 20,
+    "unit": "count",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "false_positives",
+    "value": 1,
+    "unit": "count",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "false_negatives",
+    "value": 29,
+    "unit": "count",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "parsing_failures",
+    "value": 0,
+    "unit": "count",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "empty_memory_correctness_pct",
+    "value": 90.91,
+    "unit": "percent",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 11,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_latency_p50",
+    "value": 949.7,
+    "unit": "ms",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_latency_p95",
+    "value": 2657.52,
+    "unit": "ms",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "extraction_latency_p99",
+    "value": 4340.11,
+    "unit": "ms",
+    "benchmark_name": "memory_extraction",
+    "sample_size": 60,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "total_memory_update_tests",
+    "value": 10,
+    "unit": "count",
+    "benchmark_name": "memory_consistency",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:42Z",
+    "notes": ""
+  },
+  {
+    "metric": "memory_update_success_rate",
+    "value": 100.0,
+    "unit": "percent",
+    "benchmark_name": "memory_consistency",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:42Z",
+    "notes": ""
+  },
+  {
+    "metric": "duplicate_conflicting_memories",
+    "value": 0,
+    "unit": "count",
+    "benchmark_name": "memory_consistency",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:42Z",
+    "notes": ""
+  },
+  {
+    "metric": "stale_memory_rate",
+    "value": 0.0,
+    "unit": "percent",
+    "benchmark_name": "memory_consistency",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:42Z",
+    "notes": ""
+  },
+  {
+    "metric": "dual_store_sync_failures",
+    "value": 10,
+    "unit": "count",
+    "benchmark_name": "memory_consistency",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:42Z",
+    "notes": ""
+  },
+  {
+    "metric": "pre_summary_tokens_12_msgs",
+    "value": 187,
+    "unit": "tokens",
+    "benchmark_name": "summarization",
+    "sample_size": 12,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "post_summary_tokens_12_msgs",
+    "value": 6,
+    "unit": "tokens",
+    "benchmark_name": "summarization",
+    "sample_size": 12,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "compression_ratio_12_msgs",
+    "value": 0.0321,
+    "unit": "ratio",
+    "benchmark_name": "summarization",
+    "sample_size": 12,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "token_reduction_pct_12_msgs",
+    "value": 96.79,
+    "unit": "percent",
+    "benchmark_name": "summarization",
+    "sample_size": 12,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "pre_summary_tokens_20_msgs",
+    "value": 308,
+    "unit": "tokens",
+    "benchmark_name": "summarization",
+    "sample_size": 20,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "post_summary_tokens_20_msgs",
+    "value": 6,
+    "unit": "tokens",
+    "benchmark_name": "summarization",
+    "sample_size": 20,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "compression_ratio_20_msgs",
+    "value": 0.0195,
+    "unit": "ratio",
+    "benchmark_name": "summarization",
+    "sample_size": 20,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "token_reduction_pct_20_msgs",
+    "value": 98.05,
+    "unit": "percent",
+    "benchmark_name": "summarization",
+    "sample_size": 20,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "pre_summary_tokens_30_msgs",
+    "value": 471,
+    "unit": "tokens",
+    "benchmark_name": "summarization",
+    "sample_size": 30,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "post_summary_tokens_30_msgs",
+    "value": 6,
+    "unit": "tokens",
+    "benchmark_name": "summarization",
+    "sample_size": 30,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "compression_ratio_30_msgs",
+    "value": 0.0127,
+    "unit": "ratio",
+    "benchmark_name": "summarization",
+    "sample_size": 30,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "token_reduction_pct_30_msgs",
+    "value": 98.73,
+    "unit": "percent",
+    "benchmark_name": "summarization",
+    "sample_size": 30,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "summarization_threshold_messages",
+    "value": 10,
+    "unit": "messages",
+    "benchmark_name": "summarization",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": "Hardcoded agent short-term memory limit threshold = 10 messages"
+  },
+  {
+    "metric": "input_tokens_config_a_recent_only",
+    "value": 112,
+    "unit": "tokens",
+    "benchmark_name": "token_efficiency",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": "Recent history only"
+  },
+  {
+    "metric": "input_tokens_config_b_recent_plus_summary",
+    "value": 146,
+    "unit": "tokens",
+    "benchmark_name": "token_efficiency",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": "Recent history + conversation summary"
+  },
+  {
+    "metric": "input_tokens_config_c_full_context",
+    "value": 255,
+    "unit": "tokens",
+    "benchmark_name": "token_efficiency",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:42:46Z",
+    "notes": "Recent history + summary + categorized long term memory"
+  },
+  {
+    "metric": "latency_sqlite_database_p50",
+    "value": 24.61,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_sqlite_database_p95",
+    "value": 57.81,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_sqlite_database_p99",
+    "value": 58.73,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_sqlite_database_mean",
+    "value": 28.25,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_embedding_model_p50",
+    "value": 0.0,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_embedding_model_p95",
+    "value": 2.18,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_embedding_model_p99",
+    "value": 2.47,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_embedding_model_mean",
+    "value": 0.65,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_chroma_vector_store_p50",
+    "value": 7.15,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_chroma_vector_store_p95",
+    "value": 14.15,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_chroma_vector_store_p99",
+    "value": 14.32,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_chroma_vector_store_mean",
+    "value": 6.93,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_llm_generation_p50",
+    "value": 907.84,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_llm_generation_p95",
+    "value": 4182.38,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_llm_generation_p99",
+    "value": 5525.94,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_llm_generation_mean",
+    "value": 1598.71,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_memory_extraction_p50",
+    "value": 884.45,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_memory_extraction_p95",
+    "value": 1718.25,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_memory_extraction_p99",
+    "value": 1944.52,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_memory_extraction_mean",
+    "value": 1002.73,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_summarization_p50",
+    "value": 899.66,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_summarization_p95",
+    "value": 2711.32,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_summarization_p99",
+    "value": 2768.48,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_summarization_mean",
+    "value": 1154.65,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_end_to_end_chat_turn_sync_p50",
+    "value": 4401.98,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_end_to_end_chat_turn_sync_p95",
+    "value": 6060.42,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_end_to_end_chat_turn_sync_p99",
+    "value": 6151.91,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_end_to_end_chat_turn_sync_mean",
+    "value": 4409.44,
+    "unit": "ms",
+    "benchmark_name": "latency",
+    "sample_size": 15,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:44:51Z",
+    "notes": ""
+  },
+  {
+    "metric": "sync_user_latency_p50",
+    "value": 3905.91,
+    "unit": "ms",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "async_user_latency_p50",
+    "value": 1890.94,
+    "unit": "ms",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "sync_user_latency_p95",
+    "value": 6278.68,
+    "unit": "ms",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "async_user_latency_p95",
+    "value": 2047.14,
+    "unit": "ms",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "async_latency_reduction_pct",
+    "value": 51.59,
+    "unit": "percent",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "background_job_duration_p50",
+    "value": 1937.88,
+    "unit": "ms",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "background_job_duration_p95",
+    "value": 5200.97,
+    "unit": "ms",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "background_task_failures",
+    "value": 0,
+    "unit": "count",
+    "benchmark_name": "async_processing",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:15Z",
+    "notes": ""
+  },
+  {
+    "metric": "uncached_retrieval_latency_p50",
+    "value": 15.45,
+    "unit": "ms",
+    "benchmark_name": "caching",
+    "sample_size": 20,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:16Z",
+    "notes": ""
+  },
+  {
+    "metric": "cached_retrieval_latency_p50",
+    "value": 0.0,
+    "unit": "ms",
+    "benchmark_name": "caching",
+    "sample_size": 20,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:16Z",
+    "notes": ""
+  },
+  {
+    "metric": "caching_speedup_factor",
+    "value": 1.0,
+    "unit": "x",
+    "benchmark_name": "caching",
+    "sample_size": 20,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:16Z",
+    "notes": ""
+  },
+  {
+    "metric": "cache_hit_rate_pct",
+    "value": 90.0,
+    "unit": "percent",
+    "benchmark_name": "caching",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:16Z",
+    "notes": ""
+  },
+  {
+    "metric": "cache_hits_total",
+    "value": 9,
+    "unit": "count",
+    "benchmark_name": "caching",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:16Z",
+    "notes": ""
+  },
+  {
+    "metric": "cache_misses_total",
+    "value": 1,
+    "unit": "count",
+    "benchmark_name": "caching",
+    "sample_size": 10,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:16Z",
+    "notes": ""
+  },
+  {
+    "metric": "cache_invalidation_correctness",
+    "value": 1,
+    "unit": "boolean",
+    "benchmark_name": "caching",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:16Z",
+    "notes": ""
+  },
+  {
+    "metric": "rate_limit_capacity",
+    "value": 10,
+    "unit": "req",
+    "benchmark_name": "rate_limiting",
+    "sample_size": 25,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "rate_limit_refill_rate",
+    "value": 5.0,
+    "unit": "req/sec",
+    "benchmark_name": "rate_limiting",
+    "sample_size": 25,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "burst_requests_accepted",
+    "value": 10,
+    "unit": "count",
+    "benchmark_name": "rate_limiting",
+    "sample_size": 25,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "burst_requests_rejected_429",
+    "value": 15,
+    "unit": "count",
+    "benchmark_name": "rate_limiting",
+    "sample_size": 25,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "window_reset_refilled_accepted",
+    "value": 5,
+    "unit": "count",
+    "benchmark_name": "rate_limiting",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "reliability_total_scenarios",
+    "value": 5,
+    "unit": "count",
+    "benchmark_name": "reliability",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "reliability_passed_scenarios",
+    "value": 5,
+    "unit": "count",
+    "benchmark_name": "reliability",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "reliability_pass_rate_pct",
+    "value": 100.0,
+    "unit": "percent",
+    "benchmark_name": "reliability",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:17Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_total_turns",
+    "value": 6,
+    "unit": "count",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_total_pipeline_duration",
+    "value": 9640.02,
+    "unit": "ms",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_turn_latency_p50",
+    "value": 1036.24,
+    "unit": "ms",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_turn_latency_p95",
+    "value": 1678.6,
+    "unit": "ms",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_turn_latency_p99",
+    "value": 1819.94,
+    "unit": "ms",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_turn_latency_mean",
+    "value": 1162.1,
+    "unit": "ms",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_sqlite_memories_extracted",
+    "value": 5,
+    "unit": "count",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_chroma_memories_indexed",
+    "value": 5,
+    "unit": "count",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_total_messages_persisted",
+    "value": 12,
+    "unit": "count",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "e2e_background_tasks_completed",
+    "value": 6,
+    "unit": "count",
+    "benchmark_name": "end_to_end",
+    "sample_size": 6,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:28Z",
+    "notes": ""
+  },
+  {
+    "metric": "throughput_rps_concurrency_1",
+    "value": 0.46,
+    "unit": "req/sec",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_p50_concurrency_1",
+    "value": 2261.51,
+    "unit": "ms",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_p95_concurrency_1",
+    "value": 2326.25,
+    "unit": "ms",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "error_rate_concurrency_1",
+    "value": 0.0,
+    "unit": "percent",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:40Z",
+    "notes": ""
+  },
+  {
+    "metric": "throughput_rps_concurrency_3",
+    "value": 1.4,
+    "unit": "req/sec",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_p50_concurrency_3",
+    "value": 2036.63,
+    "unit": "ms",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_p95_concurrency_3",
+    "value": 2448.83,
+    "unit": "ms",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "error_rate_concurrency_3",
+    "value": 0.0,
+    "unit": "percent",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:44Z",
+    "notes": ""
+  },
+  {
+    "metric": "throughput_rps_concurrency_5",
+    "value": 4.17,
+    "unit": "req/sec",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_p50_concurrency_5",
+    "value": 1102.64,
+    "unit": "ms",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "latency_p95_concurrency_5",
+    "value": 1166.49,
+    "unit": "ms",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "error_rate_concurrency_5",
+    "value": 0.0,
+    "unit": "percent",
+    "benchmark_name": "throughput",
+    "sample_size": 5,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:45Z",
+    "notes": ""
+  },
+  {
+    "metric": "configured_llm_provider",
+    "value": "groq",
+    "unit": "name",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "configured_llm_model",
+    "value": "groq/compound-mini",
+    "unit": "name",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "avg_input_tokens_per_req",
+    "value": 255,
+    "unit": "tokens",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "avg_output_tokens_per_req",
+    "value": 120.0,
+    "unit": "tokens",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "avg_total_tokens_per_req",
+    "value": 375.0,
+    "unit": "tokens",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "estimated_cost_per_req_usd",
+    "value": 2.2e-05,
+    "unit": "USD",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 1,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "estimated_cost_per_100_reqs_usd",
+    "value": 0.0022,
+    "unit": "USD",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 100,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  },
+  {
+    "metric": "estimated_cost_per_1000_reqs_usd",
+    "value": 0.0224,
+    "unit": "USD",
+    "benchmark_name": "cost_analysis",
+    "sample_size": 1000,
+    "environment": "Local Python 3.12 / Windows",
+    "timestamp": "2026-09-19T06:46:46Z",
+    "notes": ""
+  }
+]

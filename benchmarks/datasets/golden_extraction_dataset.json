@@ -1,0 +1,408 @@
+{
+  "dataset_metadata": {
+    "name": "Golden Memory Extraction Dataset",
+    "version": "1.0",
+    "total_samples": 60,
+    "synthetic": true
+  },
+  "samples": [
+    {
+      "id": 1,
+      "message": "I really love programming in Python for backend development.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "programming_language", "value": "user loves programming in Python for backend development"}
+      ]
+    },
+    {
+      "id": 2,
+      "message": "My main goal for this year is to crack a Senior AI Engineer interview.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "target_role", "value": "crack a Senior AI Engineer interview"}
+      ]
+    },
+    {
+      "id": 3,
+      "message": "Just so you know, I live in Seattle Washington.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "location", "value": "user lives in Seattle Washington"}
+      ]
+    },
+    {
+      "id": 4,
+      "message": "I plan to travel to Japan next October for 2 weeks.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "vacation", "value": "plan to travel to Japan next October for 2 weeks"}
+      ]
+    },
+    {
+      "id": 5,
+      "message": "We decided to use FastAPI over Flask because of async performance.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "framework_choice", "value": "decided to use FastAPI over Flask"}
+      ]
+    },
+    {
+      "id": 6,
+      "message": "Hello, how are you doing today?",
+      "expected_memories": []
+    },
+    {
+      "id": 7,
+      "message": "Can you explain how quicksort works step by step?",
+      "expected_memories": []
+    },
+    {
+      "id": 8,
+      "message": "What is the weather like right now?",
+      "expected_memories": []
+    },
+    {
+      "id": 9,
+      "message": "Please forget my location.",
+      "expected_memories": [
+        {"action": "delete", "memory_type": "fact", "key": "location", "value": ""}
+      ]
+    },
+    {
+      "id": 10,
+      "message": "Clear all my stored memories and start fresh.",
+      "expected_memories": [
+        {"action": "delete_all", "memory_type": "preference", "key": "", "value": ""}
+      ]
+    },
+    {
+      "id": 11,
+      "message": "I prefer dark mode UI across all applications.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "theme", "value": "prefers dark mode UI"}
+      ]
+    },
+    {
+      "id": 12,
+      "message": "I'm aiming to earn $180k base salary.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "salary_target", "value": "aiming to earn $180k base salary"}
+      ]
+    },
+    {
+      "id": 13,
+      "message": "I graduated with a CS degree from UW in 2020.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "education", "value": "graduated with a CS degree from UW in 2020"}
+      ]
+    },
+    {
+      "id": 14,
+      "message": "I am planning to buy a new M3 MacBook Pro next month.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "hardware_purchase", "value": "planning to buy a new M3 MacBook Pro next month"}
+      ]
+    },
+    {
+      "id": 15,
+      "message": "I decided to adopt PostgreSQL for our main database.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "database", "value": "decided to adopt PostgreSQL"}
+      ]
+    },
+    {
+      "id": 16,
+      "message": "That sounds great, thank you!",
+      "expected_memories": []
+    },
+    {
+      "id": 17,
+      "message": "Write a python function to compute Fibonacci numbers.",
+      "expected_memories": []
+    },
+    {
+      "id": 18,
+      "message": "Delete my target salary goal.",
+      "expected_memories": [
+        {"action": "delete", "memory_type": "goal", "key": "salary_target", "value": ""}
+      ]
+    },
+    {
+      "id": 19,
+      "message": "I now prefer TypeScript over plain JavaScript.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "frontend_language", "value": "prefers TypeScript over plain JavaScript"}
+      ]
+    },
+    {
+      "id": 20,
+      "message": "My goal is to run a sub-2 hour half marathon.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "fitness_goal", "value": "run a sub-2 hour half marathon"}
+      ]
+    },
+    {
+      "id": 21,
+      "message": "I have 5 years of experience in backend development.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "years_of_experience", "value": "5 years of experience in backend development"}
+      ]
+    },
+    {
+      "id": 22,
+      "message": "I plan to publish an open-source library on PyPI next week.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "open_source_release", "value": "plan to publish an open-source library on PyPI"}
+      ]
+    },
+    {
+      "id": 23,
+      "message": "We decided to deploy our service on Render using Docker.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "deployment_platform", "value": "decided to deploy service on Render using Docker"}
+      ]
+    },
+    {
+      "id": 24,
+      "message": "What is the capital of France?",
+      "expected_memories": []
+    },
+    {
+      "id": 25,
+      "message": "Forget my preference for dark mode.",
+      "expected_memories": [
+        {"action": "delete", "memory_type": "preference", "key": "theme", "value": ""}
+      ]
+    },
+    {
+      "id": 26,
+      "message": "I prefer black coffee with no sugar.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "coffee_preference", "value": "prefers black coffee with no sugar"}
+      ]
+    },
+    {
+      "id": 27,
+      "message": "I want to learn Rust systems programming this summer.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "learning_goal", "value": "learn Rust systems programming"}
+      ]
+    },
+    {
+      "id": 28,
+      "message": "I work remotely from home as a full-time engineer.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "work_setup", "value": "works remotely from home full-time"}
+      ]
+    },
+    {
+      "id": 29,
+      "message": "I am planning to attend PyCon US next spring.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "conference", "value": "plan to attend PyCon US next spring"}
+      ]
+    },
+    {
+      "id": 30,
+      "message": "We selected Redis for fast in-memory caching.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "cache_store", "value": "selected Redis for fast in-memory caching"}
+      ]
+    },
+    {
+      "id": 31,
+      "message": "Can you summarize the plot of Inception?",
+      "expected_memories": []
+    },
+    {
+      "id": 32,
+      "message": "Remove my learning goal for Rust.",
+      "expected_memories": [
+        {"action": "delete", "memory_type": "goal", "key": "learning_goal", "value": ""}
+      ]
+    },
+    {
+      "id": 33,
+      "message": "I prefer VS Code over PyCharm.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "favorite_editor", "value": "prefers VS Code over PyCharm"}
+      ]
+    },
+    {
+      "id": 34,
+      "message": "My ultimate career goal is to become a CTO.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "long_term_career", "value": "become a CTO"}
+      ]
+    },
+    {
+      "id": 35,
+      "message": "I have a pet German Shepherd named Max.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "pet", "value": "has a pet German Shepherd named Max"}
+      ]
+    },
+    {
+      "id": 36,
+      "message": "I plan to refactor our authentication module next sprint.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "auth_refactor", "value": "plan to refactor authentication module"}
+      ]
+    },
+    {
+      "id": 37,
+      "message": "We decided to mandate 100% test coverage for critical paths.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "testing_policy", "value": "decided to mandate 100% test coverage"}
+      ]
+    },
+    {
+      "id": 38,
+      "message": "How do I reverse a linked list in Python?",
+      "expected_memories": []
+    },
+    {
+      "id": 39,
+      "message": "Wipe all my saved facts and goals.",
+      "expected_memories": [
+        {"action": "delete_all", "memory_type": "preference", "key": "", "value": ""}
+      ]
+    },
+    {
+      "id": 40,
+      "message": "I prefer Vim keybindings in my editor.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "keybindings", "value": "prefers Vim keybindings"}
+      ]
+    },
+    {
+      "id": 41,
+      "message": "I want to publish 5 technical blog posts this quarter.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "content_creation", "value": "publish 5 technical blog posts"}
+      ]
+    },
+    {
+      "id": 42,
+      "message": "I am a vegetarian.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "diet", "value": "user is a vegetarian"}
+      ]
+    },
+    {
+      "id": 43,
+      "message": "I plan to learn Kubernetes cluster administration.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "k8s_learning", "value": "plan to learn Kubernetes cluster administration"}
+      ]
+    },
+    {
+      "id": 44,
+      "message": "We decided to adopt ChromaDB as our vector store.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "vector_database", "value": "decided to adopt ChromaDB as vector store"}
+      ]
+    },
+    {
+      "id": 45,
+      "message": "Could you convert 500 USD to Euros?",
+      "expected_memories": []
+    },
+    {
+      "id": 46,
+      "message": "Delete my pet fact.",
+      "expected_memories": [
+        {"action": "delete", "memory_type": "fact", "key": "pet", "value": ""}
+      ]
+    },
+    {
+      "id": 47,
+      "message": "I prefer mechanical keyboards with brown switches.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "hardware_preference", "value": "prefers mechanical keyboard with brown switches"}
+      ]
+    },
+    {
+      "id": 48,
+      "message": "My goal is to achieve 99.9% uptime for our web service.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "reliability_goal", "value": "achieve 99.9% uptime for web service"}
+      ]
+    },
+    {
+      "id": 49,
+      "message": "I speak English and Spanish fluently.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "spoken_languages", "value": "speaks English and Spanish fluently"}
+      ]
+    },
+    {
+      "id": 50,
+      "message": "I plan to set up CI/CD pipeline using GitHub Actions.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "cicd_setup", "value": "plan to set up CI/CD pipeline using GitHub Actions"}
+      ]
+    },
+    {
+      "id": 51,
+      "message": "We decided to use Docker multi-stage builds to shrink image size.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "docker_strategy", "value": "decided to use Docker multi-stage builds"}
+      ]
+    },
+    {
+      "id": 52,
+      "message": "What is the difference between TCP and UDP?",
+      "expected_memories": []
+    },
+    {
+      "id": 53,
+      "message": "Forget my preference for mechanical keyboards.",
+      "expected_memories": [
+        {"action": "delete", "memory_type": "preference", "key": "hardware_preference", "value": ""}
+      ]
+    },
+    {
+      "id": 54,
+      "message": "I prefer using Linux for production servers.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "preference", "key": "server_os", "value": "prefers using Linux for production servers"}
+      ]
+    },
+    {
+      "id": 55,
+      "message": "I am working to obtain the AWS Solutions Architect certification.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "goal", "key": "certification_goal", "value": "obtain AWS Solutions Architect certification"}
+      ]
+    },
+    {
+      "id": 56,
+      "message": "My team consists of 8 software engineers.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "fact", "key": "team_size", "value": "team consists of 8 software engineers"}
+      ]
+    },
+    {
+      "id": 57,
+      "message": "I plan to implement rate limiting middleware in FastAPI next week.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "plan", "key": "rate_limiting_plan", "value": "plan to implement rate limiting middleware"}
+      ]
+    },
+    {
+      "id": 58,
+      "message": "We decided to standardize on JSON for structured logging.",
+      "expected_memories": [
+        {"action": "add_or_update", "memory_type": "decision", "key": "logging_standard", "value": "decided to standardize on JSON for structured logging"}
+      ]
+    },
+    {
+      "id": 59,
+      "message": "Can you give me a recipe for chocolate chip cookies?",
+      "expected_memories": []
+    },
+    {
+      "id": 60,
+      "message": "Clear all memory history.",
+      "expected_memories": [
+        {"action": "delete_all", "memory_type": "preference", "key": "", "value": ""}
+      ]
+    }
+  ]
+}
